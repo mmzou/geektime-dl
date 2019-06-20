@@ -69,11 +69,9 @@ func (c *Client) Login(phone, password string) *Result {
 	}
 
 	header := map[string]string{
-		"Referer": "https://account.geekbang.org/signin?redirect=https%3A%2F%2Ftime.geekbang.org%2F",
-		"Accept":  "application/json",
-		// "Content-Type": "application/json",
-		"Content-Type": "application/x-www-form-urlencoded",
-		"Connection":   "keep-alive",
+		"Referer":    "https://account.geekbang.org/signin?redirect=https%3A%2F%2Ftime.geekbang.org%2F",
+		"Accept":     "application/json",
+		"Connection": "keep-alive",
 	}
 	body, err := c.Fetch("POST", "https://account.geekbang.org/account/ticket/login", post, header)
 	if err != nil {

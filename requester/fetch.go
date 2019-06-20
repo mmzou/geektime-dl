@@ -6,8 +6,9 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
+
+	jsoniter "github.com/json-iterator/go"
 )
 
 //HTTPGet 简单实现 http 访问 GET 请求
@@ -52,11 +53,12 @@ func (h *HTTPClient) Req(method string, urlStr string, post interface{}, header 
 		case io.Reader:
 			obody = value
 		case map[string]string:
-			query := url.Values{}
-			for k, v := range value {
-				query.Set(k, v)
+			postData, err := jsoniter.Marshal(value)
+			if err != nil {
+				return nil, err
 			}
-			obody = strings.NewReader(query.Encode())
+			header["Content-Type"] = "application/json"
+			obody = bytes.NewReader(postData)
 		case string:
 			obody = strings.NewReader(value)
 		case []byte:
