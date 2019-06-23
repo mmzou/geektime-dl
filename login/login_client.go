@@ -1,9 +1,9 @@
 package login
 
 import (
-	"fmt"
 	"net/http/cookiejar"
 	"net/url"
+	"regexp"
 	"strings"
 
 	jsoniter "github.com/json-iterator/go"
@@ -82,6 +82,9 @@ func (c *Client) Login(phone, password string) *Result {
 		return result
 	}
 
+	rex, _ := regexp.Compile("\\[\\]")
+	body = rex.ReplaceAll(body, []byte("{}"))
+
 	if err = jsoniter.Unmarshal(body, &result); err != nil {
 		result.Code = -1
 		result.Error.Code = -1
@@ -90,12 +93,9 @@ func (c *Client) Login(phone, password string) *Result {
 		return result
 	}
 
-	if result.Code == 0 {
+	if result.IsLoginSuccess() {
 		result.parseCookies("https://account.geekbang.org", c.Jar.(*cookiejar.Jar))
 	}
-
-	url, _ := url.Parse("https://account.geekbang.org")
-	fmt.Println(body, post, c.Jar.Cookies(url))
 
 	return result
 }
@@ -118,4 +118,9 @@ func (r *Result) parseCookies(targetURL string, jar *cookiejar.Jar) {
 		cookieArr = append(cookieArr, cookie.String())
 	}
 	r.Data.CookieString = strings.Join(cookieArr, ";")
+}
+
+//IsLoginSuccess 是否登陆成功
+func (r *Result) IsLoginSuccess() bool {
+	return r.Code == 0
 }

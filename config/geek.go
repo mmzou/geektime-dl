@@ -1,11 +1,13 @@
 package config
 
+//User geek time user info
 type User struct {
 	ID     int    `json:"id"`
 	Name   string `json:"name"`
 	Avatar string `json:"avatar"`
 }
 
+//Geektime geek time info
 type Geektime struct {
 	User
 	GCID         string `json:"gcid"`

@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -24,8 +25,10 @@ var (
 
 //ConfigsData 配置数据
 type ConfigsData struct {
+	AcitveUID int
 	Geektimes Geektimes
 
+	activeUser     *Geektime
 	configFilePath string
 	configFile     *os.File
 	fileMu         sync.Mutex
@@ -37,10 +40,43 @@ func (c *ConfigsData) Init() error {
 		return ErrConfigFilePathNotSet
 	}
 
+	//初始化默认配置
 	c.initDefaultConfig()
+	//从配置文件中加载配置
 	err := c.loadConfigFromFile()
 	if err != nil {
 		return err
+	}
+
+	//初始化登陆用户信息
+	c.initActiveUser()
+
+	return nil
+}
+
+func (c *ConfigsData) initActiveUser() error {
+	//如果已经初始化过，则跳过
+	if c.AcitveUID > 0 && c.activeUser != nil && c.activeUser.ID == c.AcitveUID {
+		return nil
+	}
+
+	if c.AcitveUID == 0 && c.activeUser != nil {
+		c.AcitveUID = c.activeUser.ID
+		return nil
+	}
+
+	if c.AcitveUID > 0 {
+		for _, geek := range c.Geektimes {
+			if geek.ID == c.AcitveUID {
+				c.activeUser = geek
+				break
+			}
+		}
+		return nil
+	}
+
+	if len(c.Geektimes) > 0 {
+		return ErrHasLoginedNotLogin
 	}
 
 	return nil
@@ -57,8 +93,7 @@ func (c *ConfigsData) Save() error {
 	defer c.fileMu.Unlock()
 
 	//todo 保存配置的数据
-	// data, err := jsoniter.MarshalIndent((*pcsConfigJSONExport)(unsafe.Pointer(c)), "", "")
-	data, err := jsoniter.MarshalIndent(c, "", "")
+	data, err := jsoniter.MarshalIndent((*configJSONExport)(unsafe.Pointer(c)), "", " ")
 
 	if err != nil {
 		panic(err)
@@ -88,11 +123,31 @@ func (c *ConfigsData) initDefaultConfig() {
 }
 
 func (c *ConfigsData) loadConfigFromFile() error {
-	//todo 从配置文件中加载配置
 	err := c.lazyOpenConfigFile()
 	if err != nil {
 		return err
 	}
+
+	info, err := c.configFile.Stat()
+	if err != nil {
+		return err
+	}
+
+	if info.Size() == 0 {
+		return c.Save()
+	}
+
+	c.fileMu.Lock()
+	defer c.fileMu.Unlock()
+
+	_, err = c.configFile.Seek(0, os.SEEK_SET)
+	if err != nil {
+		return nil
+	}
+
+	//从配置文件中加载配置
+	decoder := jsoniter.NewDecoder(c.configFile)
+	decoder.Decode((*configJSONExport)(unsafe.Pointer(c)))
 
 	return nil
 }
