@@ -7,6 +7,7 @@ import (
 	"unsafe"
 
 	jsoniter "github.com/json-iterator/go"
+	"github.com/mmzou/geektime-dl/service"
 )
 
 const (
@@ -32,6 +33,7 @@ type ConfigsData struct {
 	configFilePath string
 	configFile     *os.File
 	fileMu         sync.Mutex
+	service        *service.Service
 }
 
 //Init 初始化配置
@@ -49,7 +51,11 @@ func (c *ConfigsData) Init() error {
 	}
 
 	//初始化登陆用户信息
-	c.initActiveUser()
+	err = c.initActiveUser()
+	if err != nil {
+		return err
+	}
+	c.service = c.activeUser.Service()
 
 	return nil
 }
@@ -69,17 +75,16 @@ func (c *ConfigsData) initActiveUser() error {
 		for _, geek := range c.Geektimes {
 			if geek.ID == c.AcitveUID {
 				c.activeUser = geek
-				break
+				return nil
 			}
 		}
-		return nil
 	}
 
 	if len(c.Geektimes) > 0 {
 		return ErrHasLoginedNotLogin
 	}
 
-	return nil
+	return ErrNotLogin
 }
 
 //Save 保存配置
@@ -201,4 +206,12 @@ func GetConfigDir() string {
 	}
 
 	return filepath.Join("/tmp", "geekbang")
+}
+
+//ActiveUserService user service
+func (c *ConfigsData) ActiveUserService() *service.Service {
+	if c.service == nil {
+		c.service = c.activeUser.Service()
+	}
+	return c.service
 }
