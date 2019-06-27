@@ -10,7 +10,7 @@ import (
 var (
 	geekBangCommURL = &url.URL{
 		Scheme: "https",
-		Host:   "geekbang.com",
+		Host:   "geekbang.org",
 	}
 )
 
@@ -27,23 +27,19 @@ func NewService(gcid, gcess, serviceID string) *Service {
 	cookies = append(cookies, &http.Cookie{
 		Name:   "GCID",
 		Value:  gcid,
-		Domain: ".geekbang.com",
+		Domain: ".geekbang.org",
 	})
 	cookies = append(cookies, &http.Cookie{
 		Name:   "GCESS",
 		Value:  gcess,
-		Domain: ".geekbang.com",
+		Domain: ".geekbang.org",
 	})
 	cookies = append(cookies, &http.Cookie{
 		Name:   "SERVERID",
 		Value:  serviceID,
-		Domain: ".geekbang.com",
+		Domain: ".geekbang.org",
 	})
 	client.Jar.SetCookies(geekBangCommURL, cookies)
 
 	return &Service{client: client}
-}
-
-func (s *Service) User() ([]byte, error) {
-	return s.client.Fetch("POST", "https://account.geekbang.org/account/user", nil, nil)
 }

@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 
 	"github.com/mmzou/geektime-dl/config"
 )
 
 func init() {
 
-	err := config.Config.Init()
+	err := config.Instance.Init()
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -39,17 +40,19 @@ func main() {
 
 	// fmt.Println("geektime", geektime)
 
-	// config.Config.Geektimes = append(config.Config.Geektimes, geektime)
-	// config.Config.AcitveUID = geektime.ID
+	// config.Instance.Geektimes = append(config.Instance.Geektimes, geektime)
+	// config.Instance.AcitveUID = geektime.ID
 
-	// err := config.Config.Save()
+	// err := config.Instance.Save()
 	// if err != nil {
 	// 	fmt.Println(err)
 	// }
 	// fmt.Println(geektime)
-	user, err := config.Config.ActiveUserService().User()
+	res, err := config.Instance.ActiveUserService().User()
 	if err != nil {
 		fmt.Println("error", err)
 	}
-	fmt.Println("bbbb", user)
+	defer res.Body.Close()
+	user, err := ioutil.ReadAll(res.Body)
+	fmt.Println(string(user))
 }

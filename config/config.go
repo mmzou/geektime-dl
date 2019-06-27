@@ -20,8 +20,8 @@ const (
 var (
 	configFilePath = filepath.Join(GetConfigDir(), ConfigName)
 
-	//Config 配置信息 全局调用
-	Config = NewConfig(configFilePath)
+	//Instance 配置信息 全局调用
+	Instance = NewConfig(configFilePath)
 )
 
 //ConfigsData 配置数据
