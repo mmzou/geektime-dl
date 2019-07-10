@@ -34,7 +34,7 @@ type Result struct {
 	} `json:"error"`
 	Extra struct {
 		Cost      float64 `json:"cost"`
-		RequestID string  `json:"request-iud"`
+		RequestID string  `json:"request-id"`
 	} `json:"extra"`
 }
 

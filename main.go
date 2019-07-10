@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 
 	"github.com/mmzou/geektime-dl/config"
 )
@@ -38,8 +37,6 @@ func main() {
 	// 	CookieString: result.Data.CookieString,
 	// }
 
-	// fmt.Println("geektime", geektime)
-
 	// config.Instance.Geektimes = append(config.Instance.Geektimes, geektime)
 	// config.Instance.AcitveUID = geektime.ID
 
@@ -48,11 +45,11 @@ func main() {
 	// 	fmt.Println(err)
 	// }
 	// fmt.Println(geektime)
-	res, err := config.Instance.ActiveUserService().User()
+	user, err := config.Instance.ActiveUserService().User()
 	if err != nil {
 		fmt.Println("error", err)
+		return
 	}
-	defer res.Body.Close()
-	user, err := ioutil.ReadAll(res.Body)
-	fmt.Println(string(user))
+
+	fmt.Printf("%[1]v %[1]T", user)
 }

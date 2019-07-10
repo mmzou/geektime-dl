@@ -1,8 +1,19 @@
 package service
 
-import "net/http"
+//User user info
+func (s *Service) User() (*User, Error) {
+	body, err := s.RequestUser()
 
-//User get user info
-func (s *Service) User() (*http.Response, error) {
-	return s.client.Req("POST", "https://account.geekbang.org/account/user", nil, map[string]string{"Origin": "https://account.geekbang.org"})
+	if err != nil {
+		return nil, err
+	}
+
+	defer body.Close()
+
+	user := new(User)
+	if err := handleJSONParse(body, &user); err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
