@@ -25,3 +25,46 @@ func (g *Geektime) Service() *service.Service {
 
 	return ser
 }
+
+//SetUserByGcidAndGcess set user
+func (c *ConfigsData) SetUserByGcidAndGcess(gcid, gcess, serverID string) (*Geektime, error) {
+	ser := service.NewService(gcid, gcess, serverID)
+	user, err := ser.User()
+	if err != nil {
+		return nil, err
+	}
+
+	c.DeleteUser(&User{ID: user.UID})
+
+	geektime := &Geektime{
+		User: User{
+			ID:     user.UID,
+			Name:   user.Nickname,
+			Avatar: user.Avatar,
+		},
+		GCID:     gcid,
+		GCESS:    gcess,
+		ServerID: serverID,
+	}
+
+	c.Geektimes = append(c.Geektimes, geektime)
+
+	c.setActiveUser(geektime)
+
+	return geektime, nil
+}
+
+//DeleteUser delete
+func (c *ConfigsData) DeleteUser(u *User) {
+	for k, gk := range c.Geektimes {
+		if gk.ID == u.ID {
+			c.Geektimes = append(c.Geektimes[:k], c.Geektimes[k+1:]...)
+			break
+		}
+	}
+}
+
+func (c *ConfigsData) setActiveUser(g *Geektime) {
+	c.AcitveUID = g.ID
+	c.activeUser = g
+}

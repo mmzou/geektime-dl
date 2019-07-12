@@ -52,7 +52,7 @@ func NewLoginClient() *Client {
 //InitLoginPage init
 func (c *Client) InitLoginPage() {
 	res, _ := c.Get("https://account.geekbang.org/signin?redirect=https%3A%2F%2Ftime.geekbang.org%2F")
-	res.Body.Close()
+	defer res.Body.Close()
 }
 
 //Login by phone and dpassword

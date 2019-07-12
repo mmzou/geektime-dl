@@ -2,8 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/mmzou/geektime-dl/cli/cmds"
 	"github.com/mmzou/geektime-dl/config"
+	"github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
 )
 
 func init() {
@@ -15,41 +19,11 @@ func init() {
 }
 
 func main() {
-	// login := login.NewLoginClient()
-	// phone := "13240929572"
-	// password := "123123"
-	// result := login.Login(phone, password)
-	// if !result.IsLoginSuccess() {
-	// 	fmt.Println(result.Error.Msg)
-	// 	return
-	// }
-
-	// geektime := &config.Geektime{
-	// 	User: config.User{
-	// 		ID:     result.Data.UID,
-	// 		Name:   result.Data.Name,
-	// 		Avatar: result.Data.Avatar,
-	// 	},
-	// 	GCID:         result.Data.GCID,
-	// 	GCESS:        result.Data.GCESS,
-	// 	Ticket:       result.Data.Ticket,
-	// 	ServerID:     result.Data.ServerID,
-	// 	CookieString: result.Data.CookieString,
-	// }
-
-	// config.Instance.Geektimes = append(config.Instance.Geektimes, geektime)
-	// config.Instance.AcitveUID = geektime.ID
-
-	// err := config.Instance.Save()
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// fmt.Println(geektime)
-	user, err := config.Instance.ActiveUserService().User()
-	if err != nil {
-		fmt.Println("error", err)
-		return
+	app := cmds.NewApp()
+	app.Commands = []cli.Command{
+		cmds.NewLoginCommand(),
 	}
-
-	fmt.Printf("%[1]v %[1]T", user)
+	if err := app.Run(os.Args); err != nil {
+		logrus.Fatal(err)
+	}
 }
