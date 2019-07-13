@@ -23,6 +23,16 @@ var (
 		}
 		return nil
 	}
+	authorizationFunc = func(c *cli.Context) error {
+		if config.Instance.AcitveUID <= 0 {
+			if len(config.Instance.Geektimes) > 0 {
+				return config.ErrHasLoginedNotLogin
+			}
+			return config.ErrNotLogin
+		}
+
+		return nil
+	}
 )
 
 //NewApp cli app

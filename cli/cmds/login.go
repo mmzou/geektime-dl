@@ -13,11 +13,19 @@ import (
 type Login struct {
 	phone    string
 	password string
+	gcid     string
+	gcess    string
+	serverID string
 }
 
 //IsByPhoneAndPassword 通过手机号和密码登录
 func (l *Login) IsByPhoneAndPassword() bool {
 	return l.phone != "" && l.password != ""
+}
+
+//IsByCookie cookie login
+func (l *Login) IsByCookie() bool {
+	return l.gcid != "" && l.gcess != ""
 }
 
 //LoginConfig config
@@ -41,6 +49,21 @@ func NewLoginCommand() cli.Command {
 				Usage:       "登录密码",
 				Destination: &LoginConfig.password,
 			},
+			cli.StringFlag{
+				Name:        "gcid",
+				Usage:       "GCID Cookie",
+				Destination: &LoginConfig.gcid,
+			},
+			cli.StringFlag{
+				Name:        "gcess",
+				Usage:       "GCESS Cookie",
+				Destination: &LoginConfig.gcess,
+			},
+			cli.StringFlag{
+				Name:        "serverId",
+				Usage:       "SERVERID Cookie",
+				Destination: &LoginConfig.serverID,
+			},
 		},
 		After: configSaveFunc,
 	}
@@ -48,14 +71,21 @@ func NewLoginCommand() cli.Command {
 
 func loginAction(c *cli.Context) error {
 	//通过手机号和密码登录
+	var (
+		gcid     = LoginConfig.gcid
+		gcess    = LoginConfig.gcess
+		serverID = LoginConfig.serverID
+		err      error
+	)
 	if LoginConfig.IsByPhoneAndPassword() {
-		gcid, gcess, serverID, err := application.Login(LoginConfig.phone, LoginConfig.password)
+		gcid, gcess, serverID, err = application.Login(LoginConfig.phone, LoginConfig.password)
 		if err != nil {
 			return err
 		}
+	}
 
+	if gcid != "" && gcess != "" {
 		geektime, err := config.Instance.SetUserByGcidAndGcess(gcid, gcess, serverID)
-
 		if err != nil {
 			return err
 		}

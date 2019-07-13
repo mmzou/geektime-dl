@@ -53,9 +53,12 @@ func (c *ConfigsData) Init() error {
 	//初始化登陆用户信息
 	err = c.initActiveUser()
 	if err != nil {
-		return err
+		return nil
 	}
-	c.service = c.activeUser.Service()
+
+	if c.activeUser != nil {
+		c.service = c.activeUser.Service()
+	}
 
 	return nil
 }

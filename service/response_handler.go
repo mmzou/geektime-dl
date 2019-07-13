@@ -19,30 +19,38 @@ func (rd resultData) String() string {
 	return string(rd)
 }
 
+type resultError struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+}
+
+func (re *resultError) UnmarshalJSON(data []byte) error {
+	str := string(data)
+	if str == "[]" {
+		str = "{}"
+	}
+
+	e := resultError{}
+	utils.UnmarshalJSON([]byte(str), e)
+
+	*re = e
+
+	return nil
+}
+
 // Result 从百度服务器解析的数据结构
 type Result struct {
-	Code  int        `json:"code"`
-	Data  resultData `json:"data"`
-	Error struct {
-		Code int    `json:"code"`
-		Msg  string `json:"msg"`
-	} `json:"error"`
-	Extra struct {
-		Cost      float64 `json:"cost"`
-		RequestID string  `json:"request-id"`
-	} `json:"extra"`
+	Code  int         `json:"code"`
+	Data  resultData  `json:"data"`
+	Error resultError `json:"error"`
+	// Extra struct {
+	// 	Cost      float64 `json:"cost"`
+	// 	RequestID string  `json:"request-id"`
+	// } `json:"extra"`
 }
 
 func (r *Result) isSuccess() bool {
 	return r.Code == 0
-}
-
-//User user info
-type User struct {
-	UID       int    `json:"uid"`
-	Nickname  string `json:"nickname"`
-	Avatar    string `json:"avatar"`
-	Cellphone string `json:"cellphone"`
 }
 
 func handleJSONParse(reader io.Reader, v interface{}) Error {
