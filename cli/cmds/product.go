@@ -10,13 +10,15 @@ import (
 )
 
 //NewProductCommand login command
-func NewProductCommand() cli.Command {
-	return cli.Command{
-		Name:      "product",
-		Usage:     "Geektime all products",
-		UsageText: appName + " product [OPTIONS]",
-		Action:    productAction,
-		Before:    authorizationFunc,
+func NewProductCommand() []cli.Command {
+	return []cli.Command{
+		cli.Command{
+			Name:      "product",
+			Usage:     "Geektime all products",
+			UsageText: appName + " product [OPTIONS]",
+			Action:    productAction,
+			Before:    authorizationFunc,
+		},
 	}
 }
 
@@ -28,14 +30,17 @@ func productAction(c *cli.Context) error {
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"#", "类型", "名称", "作者"})
+	table.SetHeader([]string{"#", "ID", "类型", "名称", "作者"})
 
+	i := 0
 	for _, p := range products.Column.List {
-		table.Append([]string{strconv.Itoa(p.Extra.LastAid), products.Column.Title, p.Title, p.Extra.AuthorName})
+		table.Append([]string{strconv.Itoa(i), strconv.Itoa(p.Extra.LastAid), products.Column.Title, p.Title, p.Extra.AuthorName})
+		i++
 	}
 
 	for _, p := range products.Course.List {
-		table.Append([]string{strconv.Itoa(p.Extra.ColumnID), products.Course.Title, p.Title, p.Extra.AuthorName})
+		table.Append([]string{strconv.Itoa(i), strconv.Itoa(p.Extra.ColumnID), products.Course.Title, p.Title, p.Extra.AuthorName})
+		i++
 	}
 
 	table.Render()

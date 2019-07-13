@@ -32,40 +32,49 @@ func (l *Login) IsByCookie() bool {
 var LoginConfig Login
 
 //NewLoginCommand login command
-func NewLoginCommand() cli.Command {
-	return cli.Command{
-		Name:      "login",
-		Usage:     "Login geektime",
-		UsageText: appName + " login [OPTIONS]",
-		Action:    loginAction,
-		Flags: []cli.Flag{
-			cli.StringFlag{
-				Name:        "phone",
-				Usage:       "登录手机号",
-				Destination: &LoginConfig.phone,
+func NewLoginCommand() []cli.Command {
+	return []cli.Command{
+		cli.Command{
+			Name:      "login",
+			Usage:     "Login geektime",
+			UsageText: appName + " login [OPTIONS]",
+			Action:    loginAction,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:        "phone",
+					Usage:       "登录手机号",
+					Destination: &LoginConfig.phone,
+				},
+				cli.StringFlag{
+					Name:        "password",
+					Usage:       "登录密码",
+					Destination: &LoginConfig.password,
+				},
+				cli.StringFlag{
+					Name:        "gcid",
+					Usage:       "GCID Cookie",
+					Destination: &LoginConfig.gcid,
+				},
+				cli.StringFlag{
+					Name:        "gcess",
+					Usage:       "GCESS Cookie",
+					Destination: &LoginConfig.gcess,
+				},
+				cli.StringFlag{
+					Name:        "serverId",
+					Usage:       "SERVERID Cookie",
+					Destination: &LoginConfig.serverID,
+				},
 			},
-			cli.StringFlag{
-				Name:        "password",
-				Usage:       "登录密码",
-				Destination: &LoginConfig.password,
-			},
-			cli.StringFlag{
-				Name:        "gcid",
-				Usage:       "GCID Cookie",
-				Destination: &LoginConfig.gcid,
-			},
-			cli.StringFlag{
-				Name:        "gcess",
-				Usage:       "GCESS Cookie",
-				Destination: &LoginConfig.gcess,
-			},
-			cli.StringFlag{
-				Name:        "serverId",
-				Usage:       "SERVERID Cookie",
-				Destination: &LoginConfig.serverID,
-			},
+			After: configSaveFunc,
 		},
-		After: configSaveFunc,
+		cli.Command{
+			Name:        "who",
+			Usage:       "获取当前帐号",
+			Description: "获取当前帐号的信息",
+			Action:      whoAction,
+			Before:      authorizationFunc,
+		},
 	}
 }
 
@@ -96,4 +105,11 @@ func loginAction(c *cli.Context) error {
 	}
 
 	return errors.New("请输入登录凭证信息")
+}
+
+func whoAction(c *cli.Context) error {
+	activeUser := config.Instance.ActiveUser()
+	fmt.Printf("当前帐号 uid: %d, 用户名: %s, 头像地址: %s \n", activeUser.ID, activeUser.Name, activeUser.Avatar)
+
+	return nil
 }

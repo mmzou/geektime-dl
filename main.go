@@ -20,10 +20,10 @@ func init() {
 
 func main() {
 	app := cmds.NewApp()
-	app.Commands = []cli.Command{
-		cmds.NewLoginCommand(),
-		cmds.NewProductCommand(),
-	}
+	app.Commands = []cli.Command{}
+	app.Commands = append(app.Commands, cmds.NewLoginCommand()...)
+	app.Commands = append(app.Commands, cmds.NewProductCommand()...)
+
 	if err := app.Run(os.Args); err != nil {
 		logrus.Fatal(err)
 	}

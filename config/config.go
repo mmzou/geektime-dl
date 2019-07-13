@@ -211,6 +211,11 @@ func GetConfigDir() string {
 	return filepath.Join("/tmp", "geekbang")
 }
 
+//ActiveUser active user
+func (c *ConfigsData) ActiveUser() *Geektime {
+	return c.activeUser
+}
+
 //ActiveUserService user service
 func (c *ConfigsData) ActiveUserService() *service.Service {
 	if c.service == nil {
