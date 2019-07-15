@@ -74,6 +74,7 @@ func NewLoginCommand() []cli.Command {
 		cli.Command{
 			Name:        "who",
 			Usage:       "获取当前帐号",
+			UsageText:   appName + " who",
 			Description: "获取当前帐号的信息",
 			Action:      whoAction,
 			Before:      authorizationFunc,
@@ -81,12 +82,14 @@ func NewLoginCommand() []cli.Command {
 		cli.Command{
 			Name:        "users",
 			Usage:       "获取帐号列表",
+			UsageText:   appName + " users",
 			Description: "获取当前已登录的帐号列表",
 			Action:      usersAction,
 		},
 		cli.Command{
 			Name:        "su",
 			Usage:       "切换极客时间帐号",
+			UsageText:   appName + " su [UID]",
 			Description: "切换已登录的极客时间账号",
 			Action:      suAction,
 			After:       configSaveFunc,

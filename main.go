@@ -22,7 +22,8 @@ func main() {
 	app := cmds.NewApp()
 	app.Commands = []cli.Command{}
 	app.Commands = append(app.Commands, cmds.NewLoginCommand()...)
-	app.Commands = append(app.Commands, cmds.NewProductCommand()...)
+	app.Commands = append(app.Commands, cmds.NewBuyCommand()...)
+	app.Commands = append(app.Commands, cmds.NewCourseCommand()...)
 
 	if err := app.Run(os.Args); err != nil {
 		logrus.Fatal(err)

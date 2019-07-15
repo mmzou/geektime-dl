@@ -2,8 +2,8 @@ package service
 
 // ProductAll all protuct
 type ProductAll struct {
-	Column *Product
-	Course *Product
+	Columns *Product
+	Videos  *Product
 }
 
 //Product all product
@@ -33,9 +33,9 @@ type Product struct {
 	} `json:"list"`
 }
 
-//ProductAll 获取所有课程信息
-func (s *Service) ProductAll() (*ProductAll, error) {
-	body, err := s.requestProductAll()
+//BuyProductAll 获取所有购买的课程信息
+func (s *Service) BuyProductAll() (*ProductAll, error) {
+	body, err := s.requestBuyAll()
 
 	if err != nil {
 		return nil, err
@@ -43,15 +43,14 @@ func (s *Service) ProductAll() (*ProductAll, error) {
 
 	defer body.Close()
 
-	// protuct := new(Product)
 	var products []*Product
 
 	if err := handleJSONParse(body, &products); err != nil {
 		return nil, err
 	}
 	productAll := &ProductAll{
-		Column: products[0],
-		Course: products[1],
+		Columns: products[0],
+		Videos:  products[1],
 	}
 
 	return productAll, nil

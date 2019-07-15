@@ -52,7 +52,7 @@ func (h *HTTPClient) Req(method string, urlStr string, post interface{}, header 
 		switch value := post.(type) {
 		case io.Reader:
 			obody = value
-		case map[string]string:
+		case map[string]string, map[string]int, map[string]interface{}, []int, []string:
 			postData, err := jsoniter.Marshal(value)
 			if err != nil {
 				return nil, err

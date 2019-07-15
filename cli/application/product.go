@@ -4,19 +4,19 @@ import (
 	"github.com/mmzou/geektime-dl/service"
 )
 
-//ProductAll product
-func ProductAll() (*service.ProductAll, error) {
-	return getService().ProductAll()
+//BuyProductAll product
+func BuyProductAll() (*service.ProductAll, error) {
+	return getService().BuyProductAll()
 }
 
-//Columns all columns
-func Columns() (*service.Product, error) {
-	all, err := ProductAll()
-	return all.Column, err
+//BuyColumns all columns
+func BuyColumns() (*service.Product, error) {
+	all, err := BuyProductAll()
+	return all.Columns, err
 }
 
-//Courses all columns
-func Courses() (*service.Product, error) {
-	all, err := ProductAll()
-	return all.Course, err
+//BuyVideos all columns
+func BuyVideos() (*service.Product, error) {
+	all, err := BuyProductAll()
+	return all.Videos, err
 }
