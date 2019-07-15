@@ -30,10 +30,15 @@ func (re *resultError) UnmarshalJSON(data []byte) error {
 		str = "{}"
 	}
 
-	e := resultError{}
-	utils.UnmarshalJSON([]byte(str), e)
+	type rError resultError
 
-	*re = e
+	e := new(rError)
+	err := utils.UnmarshalJSON([]byte(str), &e)
+	if err != nil {
+		return err
+	}
+
+	*re = resultError(*e)
 
 	return nil
 }
@@ -63,7 +68,7 @@ func handleJSONParse(reader io.Reader, v interface{}) Error {
 
 	if !result.isSuccess() {
 		//未登录或者登录凭证无效
-		if result.Error.Code == -3050 {
+		if result.Error.Code == -3050 || result.Error.Code == -2000 {
 			return &ErrorInfo{Err: ErrNotLogin}
 		}
 		return &ErrorInfo{Err: errors.New(result.Error.Msg)}

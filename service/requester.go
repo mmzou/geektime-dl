@@ -1,6 +1,8 @@
 package service
 
-import "io"
+import (
+	"io"
+)
 
 //requestUser get user info
 func (s *Service) requestUser() (io.ReadCloser, Error) {
@@ -21,6 +23,10 @@ func (s *Service) requestProductAll() (io.ReadCloser, Error) {
 	if err != nil {
 		defer res.Body.Close()
 		return nil, &ErrorInfo{Err: err}
+	}
+
+	if res.StatusCode == 452 {
+		return nil, &ErrorInfo{Err: ErrLoginOffline}
 	}
 
 	return res.Body, nil

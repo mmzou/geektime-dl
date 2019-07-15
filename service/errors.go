@@ -4,7 +4,9 @@ import "errors"
 
 var (
 	//ErrNotLogin not login
-	ErrNotLogin = errors.New("当前未登录，请先登录")
+	ErrNotLogin = errors.New("当前未登录获取登录已失效，请先登录")
+	//ErrLoginOffline not login
+	ErrLoginOffline = errors.New("该账号已在其他同类设备登录，如非本人操作，则密码可能已经泄露，建议立即更换密码")
 )
 
 // Error 错误信息接口

@@ -1,6 +1,10 @@
 package config
 
-import "github.com/mmzou/geektime-dl/service"
+import (
+	"errors"
+
+	"github.com/mmzou/geektime-dl/service"
+)
 
 //User geek time user info
 type User struct {
@@ -67,4 +71,21 @@ func (c *ConfigsData) DeleteUser(u *User) {
 func (c *ConfigsData) setActiveUser(g *Geektime) {
 	c.AcitveUID = g.ID
 	c.activeUser = g
+}
+
+//LoginUserCount 登录用户数量
+func (c *ConfigsData) LoginUserCount() int {
+	return len(c.Geektimes)
+}
+
+//SwitchUser switch user
+func (c *ConfigsData) SwitchUser(u *User) error {
+	for _, g := range c.Geektimes {
+		if g.ID == u.ID {
+			c.setActiveUser(g)
+			return nil
+		}
+	}
+
+	return errors.New("用户不存在")
 }
