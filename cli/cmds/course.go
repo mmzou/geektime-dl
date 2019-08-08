@@ -3,6 +3,7 @@ package cmds
 import (
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/mmzou/geektime-dl/cli/application"
 	"github.com/mmzou/geektime-dl/service"
@@ -18,14 +19,12 @@ func NewCourseCommand() []cli.Command {
 			Usage:     "获取专栏列表",
 			UsageText: appName + " column",
 			Action:    columnAction,
-			Before:    authorizationFunc,
 		},
 		cli.Command{
 			Name:      "video",
 			Usage:     "获取视频课程列表",
 			UsageText: appName + " video",
 			Action:    videoAction,
-			Before:    authorizationFunc,
 		},
 	}
 }
@@ -56,14 +55,14 @@ func videoAction(c *cli.Context) error {
 
 func renderCourses(courses []*service.Course) {
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"#", "ID", "名称", "购买", "作者"})
+	table.SetHeader([]string{"#", "ID", "名称", "时间", "购买", "作者"})
 
 	for i, p := range courses {
 		isBuy := ""
 		if p.HadSub {
 			isBuy = "是"
 		}
-		table.Append([]string{strconv.Itoa(i), strconv.Itoa(p.ID), p.ColumnTitle, isBuy, p.AuthorName})
+		table.Append([]string{strconv.Itoa(i), strconv.Itoa(p.ID), p.ColumnTitle, time.Unix(int64(p.ColumnCtime), 0).Format("2006-01-02"), isBuy, p.AuthorName})
 	}
 
 	table.Render()

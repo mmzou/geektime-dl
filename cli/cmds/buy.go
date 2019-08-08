@@ -34,7 +34,7 @@ func buyAction(c *cli.Context) error {
 
 	i := 0
 	for _, p := range products.Columns.List {
-		table.Append([]string{strconv.Itoa(i), strconv.Itoa(p.Extra.LastAid), products.Columns.Title, p.Title, p.Extra.AuthorName})
+		table.Append([]string{strconv.Itoa(i), strconv.Itoa(p.Extra.ColumnID), products.Columns.Title, p.Title, p.Extra.AuthorName})
 		i++
 	}
 

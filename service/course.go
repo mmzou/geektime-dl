@@ -45,7 +45,30 @@ type Course struct {
 	IsOnboard         bool   `json:"is_onboard"`
 	PriceType         int    `json:"price_type"`
 	SubCount          int    `json:"sub_count"`
+	ShowChapter       bool   `json:"show_chapter"`
 	UpdateFrequency   string `json:"update_frequency"`
+}
+
+//Article 课程文章信息
+type Article struct {
+	ID             int    `json:"id"`
+	ArticleTitle   string `json:"article_title"`
+	ArticleSummary string `json:"article_summary"`
+	ArticleCover   string `json:"article_cover"`
+	ArticleTime    int    `json:"article_ctime"`
+	ChapterID      int    `json:"chapter_id string"`
+	ColumnHadSub   bool   `json:"column_had_sub"`
+	IncludeAudio   bool   `json:"include_audio"`
+	//Audio info
+	AudioDownloadURL string `json:"audio_download_url"`
+}
+
+type articleResult struct {
+	Articles []Article `json:"list"`
+	Page     struct {
+		Count int  `json:"count"`
+		More  bool `json:"more"`
+	} `json:"page"`
 }
 
 //Columns 获取专栏
@@ -66,7 +89,7 @@ func (s *Service) getCourses(courseType int) ([]*Course, error) {
 		return nil, err
 	}
 
-	return s.showCourses(ids)
+	return s.getCourseDetail(ids)
 }
 
 func (s *Service) courses(courseType int) ([]int, error) {
@@ -91,7 +114,7 @@ func (s *Service) courses(courseType int) ([]int, error) {
 	return ids, nil
 }
 
-func (s *Service) showCourses(ids []int) ([]*Course, error) {
+func (s *Service) getCourseDetail(ids []int) ([]*Course, error) {
 	body, err := s.requestCourseDetail(ids)
 	if err != nil {
 		return nil, err
@@ -101,9 +124,41 @@ func (s *Service) showCourses(ids []int) ([]*Course, error) {
 
 	var courses []*Course
 	if err := handleJSONParse(body, &courses); err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 
 	return courses, nil
+}
+
+//ShowCourse 获取课程信息
+func (s *Service) ShowCourse(id int) (*Course, error) {
+	body, err := s.requestCourseIntro(id)
+	if err != nil {
+		return nil, err
+	}
+	defer body.Close()
+
+	course := new(Course)
+	if err := handleJSONParse(body, &course); err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	return course, nil
+}
+
+//Articles get course articles
+func (s *Service) Articles(id int) ([]Article, error) {
+	body, err := s.requestCourseArticles(id)
+	if err != nil {
+		return nil, err
+	}
+	defer body.Close()
+
+	articleResult := &articleResult{}
+	if err := handleJSONParse(body, articleResult); err != nil {
+		return nil, err
+	}
+
+	return articleResult.Articles, nil
 }
