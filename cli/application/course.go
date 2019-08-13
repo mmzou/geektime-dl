@@ -13,3 +13,18 @@ func Columns() ([]*service.Course, error) {
 func Videos() ([]*service.Course, error) {
 	return getService().Videos()
 }
+
+//CourseWithArticles course and articles info
+func CourseWithArticles(id int) (*service.Course, []*service.Article, error) {
+	course, err := getService().ShowCourse(id)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	articles, err := getService().Articles(id)
+	if err != nil {
+		return course, nil, err
+	}
+
+	return course, articles, nil
+}

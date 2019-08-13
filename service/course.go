@@ -64,7 +64,7 @@ type Article struct {
 }
 
 type articleResult struct {
-	Articles []Article `json:"list"`
+	Articles []*Article `json:"list"`
 	Page     struct {
 		Count int  `json:"count"`
 		More  bool `json:"more"`
@@ -148,7 +148,7 @@ func (s *Service) ShowCourse(id int) (*Course, error) {
 }
 
 //Articles get course articles
-func (s *Service) Articles(id int) ([]Article, error) {
+func (s *Service) Articles(id int) ([]*Article, error) {
 	body, err := s.requestCourseArticles(id)
 	if err != nil {
 		return nil, err
