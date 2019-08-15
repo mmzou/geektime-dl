@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/mmzou/geektime-dl/cli/application"
+	"github.com/mmzou/geektime-dl/downloader"
+	"github.com/mmzou/geektime-dl/service"
 	"github.com/urfave/cli"
 )
 
@@ -22,15 +24,47 @@ func NewDownloadCommand() []cli.Command {
 
 func downloadAction(c *cli.Context) error {
 	course, articles, err := application.CourseWithArticles(186)
-	fmt.Println(course, articles, err)
-
-	for k, v := range articles {
-		fmt.Println(k, v)
-	}
 
 	if err != nil {
 		return err
 	}
 
+	fmt.Println(extractDownloadData(course, articles))
+
 	return nil
+}
+
+func extractDownloadData(course *service.Course, articles []*service.Article) []downloader.Data {
+	data := downloader.EmptyList
+	if course.IsColumn() {
+		key := "default"
+		for _, article := range articles {
+			if !article.IncludeAudio {
+				continue
+			}
+			urls := []downloader.URL{
+				{
+					URL:  article.AudioDownloadURL,
+					Size: article.AudioSize,
+					Ext:  "mp3",
+				},
+			}
+
+			streams := map[string]downloader.Stream{
+				key: downloader.Stream{
+					URLs:    urls,
+					Size:    article.AudioSize,
+					Quality: key,
+				},
+			}
+
+			data = append(data, downloader.Data{
+				Title:   article.ArticleTitle,
+				Streams: streams,
+				Type:    "audio",
+			})
+		}
+	}
+
+	return data
 }
