@@ -1,6 +1,7 @@
 package cmds
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/mmzou/geektime-dl/cli/application"
@@ -29,12 +30,18 @@ func downloadAction(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Println(extractDownloadData(course, articles))
+	downloadCourse := extractDownloadData(course, articles)
+
+	jsonData, _ := json.MarshalIndent(downloadCourse, "", "    ")
+	fmt.Printf("%s\n", jsonData)
 
 	return nil
 }
 
-func extractDownloadData(course *service.Course, articles []*service.Article) []downloader.Data {
+func extractDownloadData(course *service.Course, articles []*service.Article) downloader.Course {
+	downloadCourse := downloader.Course{
+		Title: course.ColumnTitle,
+	}
 	data := downloader.EmptyList
 	if course.IsColumn() {
 		key := "default"
@@ -58,7 +65,7 @@ func extractDownloadData(course *service.Course, articles []*service.Article) []
 				},
 			}
 
-			data = append(data, downloader.Data{
+			data = append(data, downloader.Article{
 				Title:   article.ArticleTitle,
 				Streams: streams,
 				Type:    "audio",
@@ -66,5 +73,7 @@ func extractDownloadData(course *service.Course, articles []*service.Article) []
 		}
 	}
 
-	return data
+	downloadCourse.Articles = data
+
+	return downloadCourse
 }

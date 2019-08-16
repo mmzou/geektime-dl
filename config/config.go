@@ -26,8 +26,9 @@ var (
 
 //ConfigsData 配置数据
 type ConfigsData struct {
-	AcitveUID int
-	Geektimes Geektimes
+	AcitveUID    int
+	Geektimes    Geektimes
+	DownloadPath string
 
 	activeUser     *Geektime
 	configFilePath string

@@ -15,8 +15,8 @@ type Stream struct {
 	Name    string `json:"name"`
 }
 
-//Data download infomation
-type Data struct {
+//Article download infomation
+type Article struct {
 	Title string `json:"title"`
 	Type  string `json:"type"`
 
@@ -25,8 +25,14 @@ type Data struct {
 	URL string `json:"url"`
 }
 
+//Course 课程信息
+type Course struct {
+	Title    string    `json:"title"`
+	Articles []Article `json:"articles"`
+}
+
 //EmptyList empty data list
-var EmptyList = make([]Data, 0)
+var EmptyList = make([]Article, 0)
 
 func (stream *Stream) calculateTotalSize() {
 	size := 0
