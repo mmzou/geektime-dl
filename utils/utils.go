@@ -1,13 +1,8 @@
 package utils
 
 import (
-	"fmt"
-	"os"
-	"path/filepath"
 	"runtime"
 	"strings"
-
-	"github.com/mmzou/geektime-dl/config"
 )
 
 // MAXLENGTH Maximum length of file name
@@ -38,19 +33,19 @@ func LimitLength(s string, length int) string {
 	return s
 }
 
-//FilePath get valid file path
-func FilePath(name, ext string, escape bool) (string, error) {
-	var downloadPath string
-	if config.Instance.DownloadPath != "" {
-		if _, err := os.Stat(config.Instance.DownloadPath); err != nil {
-			return downloadPath, err
-		}
-	}
+// //FilePath get valid file path
+// func FilePath(name, ext string, escape bool) (string, error) {
+// 	var downloadPath string
+// 	if config.Instance.DownloadPath != "" {
+// 		if _, err := os.Stat(config.Instance.DownloadPath); err != nil {
+// 			return downloadPath, err
+// 		}
+// 	}
 
-	fileName := fmt.Sprintf("%s.%s", name, ext)
-	if escape {
-		fileName = FileName(fileName)
-	}
+// 	fileName := fmt.Sprintf("%s.%s", name, ext)
+// 	if escape {
+// 		fileName = FileName(fileName)
+// 	}
 
-	return filepath.Join(config.Instance.DownloadPath, fileName), nil
-}
+// 	return filepath.Join(config.Instance.DownloadPath, fileName), nil
+// }

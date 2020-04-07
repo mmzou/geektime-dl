@@ -31,9 +31,9 @@ func downloadAction(c *cli.Context) error {
 	}
 
 	downloadCourse := extractDownloadData(course, articles)
+	// printExtractDownloadData(downloadCourse)
 
-	jsonData, _ := json.MarshalIndent(downloadCourse, "", "    ")
-	fmt.Printf("%s\n", jsonData)
+	downloader.Download(downloadCourse)
 
 	return nil
 }
@@ -76,4 +76,13 @@ func extractDownloadData(course *service.Course, articles []*service.Article) do
 	downloadCourse.Articles = data
 
 	return downloadCourse
+}
+
+func printExtractDownloadData(v interface{}) {
+	jsonData, err := json.MarshalIndent(v, "", "    ")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("%s\n", jsonData)
+	}
 }
