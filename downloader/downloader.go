@@ -15,6 +15,6 @@ func progressBar(size int) *pb.ProgressBar {
 	return bar
 }
 
-func Download(course Course) {
-	course.printInfo("default", true)
+func Download(data Data) {
+	data.printInfo("default", true)
 }

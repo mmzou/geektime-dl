@@ -21,8 +21,8 @@ type Stream struct {
 	name    string
 }
 
-//Article download infomation
-type Article struct {
+//Datum download infomation
+type Datum struct {
 	Title string `json:"title"`
 	Type  string `json:"type"`
 
@@ -31,30 +31,30 @@ type Article struct {
 	URL string `json:"url"`
 }
 
-//Course 课程信息
-type Course struct {
-	Title    string    `json:"title"`
-	Articles []Article `json:"articles"`
+//Data 课程信息
+type Data struct {
+	Title string  `json:"title"`
+	Data  []Datum `json:"articles"`
 }
 
 //EmptyList empty data list
-var EmptyList = make([]Article, 0)
+var EmptyList = make([]Datum, 0)
 
-func (course *Course) printInfo(stream string, isDownloading bool) {
+func (data *Data) printInfo(stream string, isDownloading bool) {
 	cyan := color.New(color.FgCyan)
 	fmt.Println()
 	cyan.Printf(" Title:     ")
-	fmt.Println(course.Title)
+	fmt.Println(data.Title)
 
 	if isDownloading {
-		for _, article := range course.Articles {
+		for _, article := range data.Data {
 			cyan.Printf("     Title:     ")
 			fmt.Println(article.Title)
 			cyan.Printf("     Streams:   ")
 			article.Streams[stream].printStream()
 		}
 	} else {
-		for _, article := range course.Articles {
+		for _, article := range data.Data {
 			cyan.Printf("     Title:     ")
 			fmt.Println(article.Title)
 			cyan.Printf("     Streams:   ")
@@ -87,5 +87,5 @@ func (stream Stream) printStream() {
 	if stream.Size == 0 {
 		stream.calculateTotalSize()
 	}
-	fmt.Printf("%.2f MiB (%d Bytes)\n", float64(stream.Size/1024/1024), stream.Size)
+	fmt.Printf("%.2f MiB (%d Bytes)\n", float64(stream.Size)/1024/1024, stream.Size)
 }

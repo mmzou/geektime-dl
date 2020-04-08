@@ -55,8 +55,10 @@ type Article struct {
 	ArticleCover   string `json:"article_cover"`
 	ArticleTime    int    `json:"article_ctime"`
 	ChapterID      int    `json:"chapter_id string"`
-	ColumnHadSub   bool   `json:"column_had_sub"`
 	IncludeAudio   bool   `json:"include_audio"`
+	//Is can preview
+	ColumnHadSub        bool `json:"column_had_sub"`
+	ArticleCouldPreview bool `json:"article_could_preview"`
 	//Audio info
 	AudioDownloadURL string `json:"audio_download_url"`
 	AudioSize        int    `json:"audio_size"`
@@ -78,4 +80,9 @@ func (course *Course) IsColumn() bool {
 //IsVideo 是否视频
 func (course *Course) IsVideo() bool {
 	return course.ColumnType == 3
+}
+
+//IsCanPreview 是否能看
+func (article *Article) IsCanPreview() bool {
+	return article.ColumnHadSub || article.ArticleCouldPreview
 }

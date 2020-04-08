@@ -30,16 +30,16 @@ func downloadAction(c *cli.Context) error {
 		return err
 	}
 
-	downloadCourse := extractDownloadData(course, articles)
-	// printExtractDownloadData(downloadCourse)
+	downloadData := extractDownloadData(course, articles)
+	// printExtractDownloadData(downloadData)
 
-	downloader.Download(downloadCourse)
+	downloader.Download(downloadData)
 
 	return nil
 }
 
-func extractDownloadData(course *service.Course, articles []*service.Article) downloader.Course {
-	downloadCourse := downloader.Course{
+func extractDownloadData(course *service.Course, articles []*service.Article) downloader.Data {
+	downloadData := downloader.Data{
 		Title: course.ColumnTitle,
 	}
 	data := downloader.EmptyList
@@ -65,7 +65,7 @@ func extractDownloadData(course *service.Course, articles []*service.Article) do
 				},
 			}
 
-			data = append(data, downloader.Article{
+			data = append(data, downloader.Datum{
 				Title:   article.ArticleTitle,
 				Streams: streams,
 				Type:    "audio",
@@ -73,9 +73,9 @@ func extractDownloadData(course *service.Course, articles []*service.Article) do
 		}
 	}
 
-	downloadCourse.Articles = data
+	downloadData.Data = data
 
-	return downloadCourse
+	return downloadData
 }
 
 func printExtractDownloadData(v interface{}) {
