@@ -2,8 +2,11 @@ package downloader
 
 import (
 	"fmt"
+	"os"
+	"regexp"
+	"strconv"
 
-	"github.com/fatih/color"
+	"github.com/olekukonko/tablewriter"
 )
 
 //URL for url infomation
@@ -23,8 +26,10 @@ type Stream struct {
 
 //Datum download infomation
 type Datum struct {
-	Title string `json:"title"`
-	Type  string `json:"type"`
+	ID      int    `json:"id"`
+	Title   string `json:"title"`
+	Type    string `json:"type"`
+	IsCanDL bool   `json:"is_can_dl"`
 
 	Streams map[string]Stream `json:"streams"`
 
@@ -37,33 +42,35 @@ type Data struct {
 	Data  []Datum `json:"articles"`
 }
 
-//EmptyList empty data list
-var EmptyList = make([]Datum, 0)
+//EmptyData empty data list
+var EmptyData = make([]Datum, 0)
 
-func (data *Data) printInfo(stream string, isDownloading bool) {
-	cyan := color.New(color.FgCyan)
-	fmt.Println()
-	cyan.Printf(" Title:     ")
-	fmt.Println(data.Title)
+func (data *Data) printInfo(s string) {
 
-	if isDownloading {
-		for _, article := range data.Data {
-			cyan.Printf("     Title:     ")
-			fmt.Println(article.Title)
-			cyan.Printf("     Streams:   ")
-			article.Streams[stream].printStream()
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"#", "ID", "类型", "名称", "大小", "是否能下载"})
+	table.SetAutoWrapText(false)
+	i := 0
+	for _, p := range data.Data {
+		stream := p.Streams[s]
+		if stream.Size == 0 {
+			stream.calculateTotalSize()
 		}
-	} else {
-		for _, article := range data.Data {
-			cyan.Printf("     Title:     ")
-			fmt.Println(article.Title)
-			cyan.Printf("     Streams:   ")
-			fmt.Println("     # All available quality")
-			for _, s := range article.Streams {
-				s.printStream()
-			}
+		//计算大小
+		size := fmt.Sprintf("%.2fM", float64(stream.Size)/1024/1024)
+
+		reg, _ := regexp.Compile(" \\| ")
+		title := reg.ReplaceAllString(p.Title, " ")
+
+		isCanDL := ""
+		if p.IsCanDL {
+			isCanDL = "是"
 		}
+
+		table.Append([]string{strconv.Itoa(i), strconv.Itoa(p.ID), p.Type, title, size, isCanDL})
+		i++
 	}
+	table.Render()
 }
 
 func (stream *Stream) calculateTotalSize() {
@@ -72,20 +79,4 @@ func (stream *Stream) calculateTotalSize() {
 		size += url.Size
 	}
 	stream.Size = size
-}
-
-func (stream Stream) printStream() {
-	blue := color.New(color.FgBlue)
-	cyan := color.New(color.FgCyan)
-
-	blue.Println(fmt.Sprintf("          [%s]  -------------------", stream.Quality))
-	if stream.Quality != "" {
-		cyan.Printf("         Quality:         ")
-		fmt.Println(stream.Quality)
-	}
-	cyan.Printf("         Size:            ")
-	if stream.Size == 0 {
-		stream.calculateTotalSize()
-	}
-	fmt.Printf("%.2f MiB (%d Bytes)\n", float64(stream.Size)/1024/1024, stream.Size)
 }

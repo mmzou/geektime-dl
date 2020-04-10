@@ -24,7 +24,7 @@ func NewDownloadCommand() []cli.Command {
 }
 
 func downloadAction(c *cli.Context) error {
-	course, articles, err := application.CourseWithArticles(186)
+	course, articles, err := application.CourseWithArticles(301)
 
 	if err != nil {
 		return err
@@ -42,12 +42,12 @@ func extractDownloadData(course *service.Course, articles []*service.Article) do
 	downloadData := downloader.Data{
 		Title: course.ColumnTitle,
 	}
-	data := downloader.EmptyList
+	data := downloader.EmptyData
 	if course.IsColumn() {
 		key := "default"
 		for _, article := range articles {
 			if !article.IncludeAudio {
-				continue
+				//	continue
 			}
 			urls := []downloader.URL{
 				{
@@ -66,7 +66,9 @@ func extractDownloadData(course *service.Course, articles []*service.Article) do
 			}
 
 			data = append(data, downloader.Datum{
+				ID:      article.ID,
 				Title:   article.ArticleTitle,
+				IsCanDL: article.IsCanPreview(),
 				Streams: streams,
 				Type:    "audio",
 			})

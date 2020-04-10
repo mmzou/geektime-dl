@@ -55,14 +55,15 @@ func videoAction(c *cli.Context) error {
 
 func renderCourses(courses []*service.Course) {
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"#", "ID", "名称", "时间", "购买", "作者"})
+	table.SetHeader([]string{"#", "ID", "名称", "时间", "作者", "购买"})
+	table.SetAutoWrapText(false)
 
 	for i, p := range courses {
 		isBuy := ""
 		if p.HadSub {
 			isBuy = "是"
 		}
-		table.Append([]string{strconv.Itoa(i), strconv.Itoa(p.ID), p.ColumnTitle, time.Unix(int64(p.ColumnCtime), 0).Format("2006-01-02"), isBuy, p.AuthorName})
+		table.Append([]string{strconv.Itoa(i), strconv.Itoa(p.ID), p.ColumnTitle, time.Unix(int64(p.ColumnCtime), 0).Format("2006-01-02"), p.AuthorName, isBuy})
 	}
 
 	table.Render()
