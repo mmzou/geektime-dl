@@ -26,6 +26,8 @@ func main() {
 	app.Commands = append(app.Commands, cmds.NewCourseCommand()...)
 	app.Commands = append(app.Commands, cmds.NewDownloadCommand()...)
 
+	app.Action = cmds.DefaultAction
+
 	if err := app.Run(os.Args); err != nil {
 		logrus.Fatal(err)
 	}

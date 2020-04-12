@@ -1,5 +1,7 @@
 package service
 
+import "encoding/json"
+
 //CourseList 课程列表基础信息
 type CourseList struct {
 	List []struct {
@@ -62,6 +64,10 @@ type Article struct {
 	//Audio info
 	AudioDownloadURL string `json:"audio_download_url"`
 	AudioSize        int    `json:"audio_size"`
+	//Viode info
+	VideoMediaMap json.RawMessage `json:"video_media_map"`
+	VideoID       string          `json:"video_id"`
+	VideoCover    string          `json:"video_cover"`
 }
 
 type articleResult struct {

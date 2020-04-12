@@ -61,3 +61,19 @@ func NewApp() *cli.App {
 
 	return app
 }
+
+//DefaultAction default action
+func DefaultAction(c *cli.Context) error {
+	defaultCommand := "download"
+	if len(c.Args()) == 0 {
+		cli.ShowCommandHelp(c, defaultCommand)
+		return nil
+	}
+
+	dlc := c.App.Command(defaultCommand)
+	if dlc != nil {
+		return dlc.Run(c)
+	}
+
+	return nil
+}

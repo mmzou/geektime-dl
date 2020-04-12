@@ -42,38 +42,64 @@ type Data struct {
 	Data  []Datum `json:"articles"`
 }
 
+//VideoMediaMap 视频大小信息
+type VideoMediaMap struct {
+	Size int `json:"size"`
+}
+
 //EmptyData empty data list
 var EmptyData = make([]Datum, 0)
 
-func (data *Data) printInfo(s string) {
+func (data *Data) printInfo() {
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"#", "ID", "类型", "名称", "大小", "是否能下载"})
+
+	fmt.Println()
+
+	header := []string{"#", "ID", "类型", "名称"}
+	for key := range data.Data[0].Streams {
+		header = append(header, key)
+	}
+	header = append(header, "下载")
+
+	table.SetHeader(header)
 	table.SetAutoWrapText(false)
 	i := 0
 	for _, p := range data.Data {
-		stream := p.Streams[s]
-		if stream.Size == 0 {
-			stream.calculateTotalSize()
-		}
-		//计算大小
-		size := fmt.Sprintf("%.2fM", float64(stream.Size)/1024/1024)
-
 		reg, _ := regexp.Compile(" \\| ")
 		title := reg.ReplaceAllString(p.Title, " ")
 
 		isCanDL := ""
 		if p.IsCanDL {
-			isCanDL = "是"
+			isCanDL = " ✔"
 		}
 
-		table.Append([]string{strconv.Itoa(i), strconv.Itoa(p.ID), p.Type, title, size, isCanDL})
+		value := []string{strconv.Itoa(i), strconv.Itoa(p.ID), p.Type, title}
+
+		if len(p.Streams) > 0 {
+			for _, stream := range p.Streams {
+				value = append(value, fmt.Sprintf("%.2fM", float64(stream.Size)/1024/1024))
+			}
+		} else {
+			for range data.Data[0].Streams {
+				value = append(value, " -")
+			}
+		}
+
+		value = append(value, isCanDL)
+
+		table.Append(value)
 		i++
 	}
 	table.Render()
 }
 
 func (stream *Stream) calculateTotalSize() {
+
+	if stream.Size > 0 {
+		return
+	}
+
 	size := 0
 	for _, url := range stream.URLs {
 		size += url.Size
