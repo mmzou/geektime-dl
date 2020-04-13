@@ -39,6 +39,7 @@ type Datum struct {
 //Data 课程信息
 type Data struct {
 	Title string  `json:"title"`
+	Type  string  `json:"type"`
 	Data  []Datum `json:"articles"`
 }
 
@@ -50,7 +51,8 @@ type VideoMediaMap struct {
 //EmptyData empty data list
 var EmptyData = make([]Datum, 0)
 
-func (data *Data) printInfo() {
+//PrintInfo print info
+func (data *Data) PrintInfo() {
 
 	table := tablewriter.NewWriter(os.Stdout)
 

@@ -16,10 +16,10 @@ import (
 //NewDownloadCommand login command
 func NewDownloadCommand() []cli.Command {
 	return []cli.Command{
-		cli.Command{
-			Name:      "download",
-			Usage:     "下载",
-			UsageText: appName + " download",
+		{
+			Name:      "",
+			Usage:     "",
+			UsageText: "",
 			Action:    downloadAction,
 			Before:    authorizationFunc,
 			Flags: []cli.Flag{
@@ -30,11 +30,9 @@ func NewDownloadCommand() []cli.Command {
 }
 
 func downloadAction(c *cli.Context) error {
-	args := c.Parent().Args()
-	if args.First() == "download" {
-		args = c.Args()
-	}
+	showInfo := c.Parent().Bool("info") || c.Bool("info")
 
+	args := c.Parent().Args()
 	cid, err := strconv.Atoi(args.First())
 	if err != nil {
 		cli.ShowCommandHelp(c, "download")
@@ -49,7 +47,14 @@ func downloadAction(c *cli.Context) error {
 	downloadData := extractDownloadData(course, articles)
 	// printExtractDownloadData(downloadData)
 
-	downloader.Download(downloadData)
+	if showInfo {
+		downloadData.PrintInfo()
+		return nil
+	}
+
+	printExtractDownloadData(downloadData)
+
+	// downloader.Download(downloadData)
 
 	return nil
 }
@@ -61,6 +66,7 @@ func extractDownloadData(course *service.Course, articles []*service.Article) do
 	data := downloader.EmptyData
 
 	if course.IsColumn() {
+		downloadData.Type = "专栏"
 		key := "df"
 		for _, article := range articles {
 			if !article.IncludeAudio {
@@ -75,7 +81,7 @@ func extractDownloadData(course *service.Course, articles []*service.Article) do
 			}
 
 			streams := map[string]downloader.Stream{
-				key: downloader.Stream{
+				key: {
 					URLs:    urls,
 					Size:    article.AudioSize,
 					Quality: key,
@@ -91,6 +97,7 @@ func extractDownloadData(course *service.Course, articles []*service.Article) do
 			})
 		}
 	} else if course.IsVideo() {
+		downloadData.Type = "视频"
 		for _, article := range articles {
 			videoMediaMaps := &map[string]downloader.VideoMediaMap{}
 			utils.UnmarshalJSON(article.VideoMediaMap, videoMediaMaps)

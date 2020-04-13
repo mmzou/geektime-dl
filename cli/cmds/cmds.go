@@ -50,6 +50,10 @@ func NewApp() *cli.App {
 			Usage:       "Turn on debug logs",
 			Destination: &debug,
 		},
+		cli.BoolFlag{
+			Name:  "info, i",
+			Usage: "只输出视频信息",
+		},
 	}
 
 	app.Before = func(c *cli.Context) error {
@@ -64,13 +68,12 @@ func NewApp() *cli.App {
 
 //DefaultAction default action
 func DefaultAction(c *cli.Context) error {
-	defaultCommand := "download"
 	if len(c.Args()) == 0 {
-		cli.ShowCommandHelp(c, defaultCommand)
+		cli.ShowAppHelp(c)
 		return nil
 	}
 
-	dlc := c.App.Command(defaultCommand)
+	dlc := &NewDownloadCommand()[0]
 	if dlc != nil {
 		return dlc.Run(c)
 	}

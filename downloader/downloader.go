@@ -16,5 +16,5 @@ func progressBar(size int) *pb.ProgressBar {
 }
 
 func Download(data Data) {
-	data.printInfo()
+	data.PrintInfo()
 }

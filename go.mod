@@ -9,6 +9,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/sirupsen/logrus v1.5.0
 	github.com/urfave/cli v1.22.4
+	golang.org/x/tools/gopls v0.4.0 // indirect
 	gopkg.in/VividCortex/ewma.v1 v1.1.1 // indirect
 	gopkg.in/cheggaaa/pb.v1 v1.0.28 // indirect
 	gopkg.in/fatih/color.v1 v1.7.0 // indirect
