@@ -120,6 +120,12 @@ func extractDownloadData(course *service.Course, articles []*service.Article) do
 				Streams: streams,
 				Type:    "视频",
 			})
+			// if article.IsCanPreview() {
+			// 	v, _ := application.GetVideoPlayInfo(article.ID, article.VideoID)
+			// 	printExtractDownloadData(v)
+			// 	downloadData.Data = data
+			// 	return downloadData
+			// }
 		}
 
 	}

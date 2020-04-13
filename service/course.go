@@ -1,5 +1,7 @@
 package service
 
+import "github.com/mmzou/geektime-dl/utils"
+
 //Columns 获取专栏
 func (s *Service) Columns() ([]*Course, error) {
 	return s.getCourses(1)
@@ -89,4 +91,36 @@ func (s *Service) Articles(id int) ([]*Article, error) {
 	}
 
 	return articleResult.Articles, nil
+}
+
+//VideoPlayAuth 获取视频的播放授权信息
+func (s *Service) VideoPlayAuth(aid int, videoID string) (*VideoPlayAuth, error) {
+	body, err := s.requestVideoPlayAuth(aid, videoID)
+	if err != nil {
+		return nil, err
+	}
+	defer body.Close()
+
+	videoPlayAuth := &VideoPlayAuth{}
+	if err := handleJSONParse(body, videoPlayAuth); err != nil {
+		return nil, err
+	}
+
+	return videoPlayAuth, nil
+}
+
+//VideoPlayInfo 获取视频播放信息
+func (s *Service) VideoPlayInfo(playAuth string) (*VideoPlayInfo, error) {
+	body, err := s.requestVideoPlayInfo(playAuth)
+	if err != nil {
+		return nil, err
+	}
+	defer body.Close()
+
+	videoPlayInfo := &VideoPlayInfo{}
+	if err := utils.UnmarshalReader(body, &videoPlayInfo); err != nil {
+		return nil, err
+	}
+
+	return videoPlayInfo, nil
 }

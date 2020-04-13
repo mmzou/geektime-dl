@@ -70,6 +70,27 @@ type Article struct {
 	VideoCover    string          `json:"video_cover"`
 }
 
+//VideoPlayAuth 视频的播放授权信息
+type VideoPlayAuth struct {
+	PlayAuth string `json:"play_auth"`
+}
+
+//VideoPlayInfo 视频播放信息
+type VideoPlayInfo struct {
+	VideoBase struct {
+		VideoID  string `json:"VideoId"`
+		Title    string `json:"Title"`
+		CoverURL string `josn:"CoverURL"`
+	} `json:"VideoBase"`
+	PlayInfoList struct {
+		PlayInfo []struct {
+			URL        string `json:"PlayURL"`
+			Size       int64  `json:"Size"`
+			Definition string `json:"Definition"`
+		} `json:"PlayInfo"`
+	} `json:"PlayInfoList"`
+}
+
 type articleResult struct {
 	Articles []*Article `json:"list"`
 	Page     struct {

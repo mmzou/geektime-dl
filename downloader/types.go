@@ -56,8 +56,6 @@ func (data *Data) PrintInfo() {
 
 	table := tablewriter.NewWriter(os.Stdout)
 
-	fmt.Println()
-
 	header := []string{"#", "ID", "类型", "名称"}
 	for key := range data.Data[0].Streams {
 		header = append(header, key)

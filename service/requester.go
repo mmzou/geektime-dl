@@ -47,3 +47,20 @@ func (s *Service) requestCourseArticles(id int) (io.ReadCloser, Error) {
 	res, err := s.client.Req("POST", "https://time.geekbang.org/serv/v1/column/articles", data, map[string]string{"Origin": "https://time.geekbang.org"})
 	return handleHTTPResponse(res, err)
 }
+
+//获取视频的播放授权信息
+func (s *Service) requestVideoPlayAuth(aid int, videoID string) (io.ReadCloser, Error) {
+	data := map[string]interface{}{
+		"source_type": 1,
+		"aid":         aid,
+		"video_id":    videoID,
+	}
+	res, err := s.client.Req("POST", "https://time.geekbang.org/serv/v3/source_auth/video_play_auth", data, map[string]string{"Origin": "https://time.geekbang.org"})
+	return handleHTTPResponse(res, err)
+}
+
+//获取视频的播放信息
+func (s *Service) requestVideoPlayInfo(playAuth string) (io.ReadCloser, Error) {
+	res, err := s.client.Req("GET", "http://ali.mantv.top/play/info?playAuth="+playAuth, nil, nil)
+	return handleHTTPResponse(res, err)
+}
