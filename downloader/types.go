@@ -32,8 +32,6 @@ type Datum struct {
 	IsCanDL bool   `json:"is_can_dl"`
 
 	Streams map[string]Stream `json:"streams"`
-
-	URL string `json:"url"`
 }
 
 //Data 课程信息
@@ -53,6 +51,10 @@ var EmptyData = make([]Datum, 0)
 
 //PrintInfo print info
 func (data *Data) PrintInfo() {
+	if len(data.Data) == 0 {
+		fmt.Println(data.Type + "目录为空")
+		return
+	}
 
 	table := tablewriter.NewWriter(os.Stdout)
 

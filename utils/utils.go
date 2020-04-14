@@ -1,8 +1,13 @@
 package utils
 
 import (
+	"errors"
+	"fmt"
+	"net/url"
 	"runtime"
 	"strings"
+
+	"github.com/mmzou/geektime-dl/requester"
 )
 
 // MAXLENGTH Maximum length of file name
@@ -31,6 +36,39 @@ func LimitLength(s string, length int) string {
 	}
 
 	return s
+}
+
+// M3u8URLs get all ts urls from m3u8 url
+func M3u8URLs(uri string) ([]string, error) {
+	if len(uri) == 0 {
+		return nil, errors.New("Url is null")
+	}
+
+	html, err := requester.HTTPGet(uri)
+	if err != nil {
+		return nil, err
+	}
+	lines := strings.Split(string(html), "\n")
+	var urls []string
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line != "" && !strings.HasPrefix(line, "#") {
+			if strings.HasPrefix(line, "http") {
+				urls = append(urls, line)
+			} else {
+				base, err := url.Parse(uri)
+				if err != nil {
+					continue
+				}
+				u, err := url.Parse(line)
+				if err != nil {
+					continue
+				}
+				urls = append(urls, fmt.Sprintf("%s", base.ResolveReference(u)))
+			}
+		}
+	}
+	return urls, nil
 }
 
 // //FilePath get valid file path
