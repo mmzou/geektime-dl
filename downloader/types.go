@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 
 	"github.com/olekukonko/tablewriter"
@@ -31,7 +32,8 @@ type Datum struct {
 	Type    string `json:"type"`
 	IsCanDL bool   `json:"is_can_dl"`
 
-	Streams map[string]Stream `json:"streams"`
+	Streams       map[string]Stream `json:"streams"`
+	sortedStreams []Stream
 }
 
 //Data 课程信息
@@ -94,6 +96,22 @@ func (data *Data) PrintInfo() {
 		i++
 	}
 	table.Render()
+}
+
+func (v *Datum) genSortedStreams() {
+	for k, data := range v.Streams {
+		if data.Size == 0 {
+			data.calculateTotalSize()
+		}
+		data.name = k
+		v.Streams[k] = data
+		v.sortedStreams = append(v.sortedStreams, data)
+	}
+	if len(v.Streams) > 1 {
+		sort.Slice(
+			v.sortedStreams, func(i, j int) bool { return v.sortedStreams[i].Size > v.sortedStreams[j].Size },
+		)
+	}
 }
 
 func (stream *Stream) calculateTotalSize() {

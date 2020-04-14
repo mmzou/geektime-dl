@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 
@@ -14,7 +16,7 @@ import (
 const MAXLENGTH = 80
 
 //FileName filter invalid string
-func FileName(name string) string {
+func FileName(name string, ext string) string {
 	rep := strings.NewReplacer("\n", " ", "/", " ", "|", "-", ": ", "：", ":", "：", "'", "’")
 	name = rep.Replace(name)
 
@@ -23,7 +25,11 @@ func FileName(name string) string {
 		name = rep.Replace(name)
 	}
 
-	return LimitLength(name, MAXLENGTH)
+	limitedName := LimitLength(name, MAXLENGTH)
+	if ext != "" {
+		return fmt.Sprintf("%s.%s", limitedName, ext)
+	}
+	return limitedName
 }
 
 //LimitLength cut string
@@ -36,6 +42,32 @@ func LimitLength(s string, length int) string {
 	}
 
 	return s
+}
+
+// FilePath gen valid file path
+func FilePath(name, ext string, escape bool) (string, error) {
+	var outputPath string
+
+	var fileName string
+	if escape {
+		fileName = FileName(name, ext)
+	} else {
+		fileName = fmt.Sprintf("%s.%s", name, ext)
+	}
+	outputPath = filepath.Join(fileName)
+	return outputPath, nil
+}
+
+// FileSize return the file size of the specified path file
+func FileSize(filePath string) (int, bool, error) {
+	file, err := os.Stat(filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return 0, false, nil
+		}
+		return 0, false, err
+	}
+	return int(file.Size()), true, nil
 }
 
 // M3u8URLs get all ts urls from m3u8 url
@@ -70,20 +102,3 @@ func M3u8URLs(uri string) ([]string, error) {
 	}
 	return urls, nil
 }
-
-// //FilePath get valid file path
-// func FilePath(name, ext string, escape bool) (string, error) {
-// 	var downloadPath string
-// 	if config.Instance.DownloadPath != "" {
-// 		if _, err := os.Stat(config.Instance.DownloadPath); err != nil {
-// 			return downloadPath, err
-// 		}
-// 	}
-
-// 	fileName := fmt.Sprintf("%s.%s", name, ext)
-// 	if escape {
-// 		fileName = FileName(fileName)
-// 	}
-
-// 	return filepath.Join(config.Instance.DownloadPath, fileName), nil
-// }

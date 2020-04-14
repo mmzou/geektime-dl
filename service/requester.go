@@ -2,6 +2,7 @@ package service
 
 import (
 	"io"
+	"net/url"
 )
 
 //获取用户信息
@@ -61,6 +62,6 @@ func (s *Service) requestVideoPlayAuth(aid int, videoID string) (io.ReadCloser, 
 
 //获取视频的播放信息
 func (s *Service) requestVideoPlayInfo(playAuth string) (io.ReadCloser, Error) {
-	res, err := s.client.Req("GET", "http://ali.mantv.top/play/info?playAuth="+playAuth, nil, nil)
+	res, err := s.client.Req("GET", "http://ali.mantv.top/play/info?playAuth="+url.QueryEscape(playAuth), nil, nil)
 	return handleHTTPResponse(res, err)
 }
