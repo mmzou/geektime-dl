@@ -61,6 +61,9 @@ func downloadAction(c *cli.Context) error {
 
 	errors := make([]error, 0)
 	for _, datum := range downloadData.Data {
+		if !datum.IsCanDL {
+			continue
+		}
 		if err := downloader.Download(datum); err != nil {
 			errors = append(errors, err)
 		}

@@ -1,6 +1,7 @@
 package downloader
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -13,17 +14,25 @@ import (
 	"github.com/mmzou/geektime-dl/utils"
 )
 
-func progressBar(size int) *pb.ProgressBar {
+func progressBar(size int, prefix string) *pb.ProgressBar {
 	bar := pb.New(size).SetUnits(pb.U_BYTES).SetRefreshRate(time.Millisecond * 10)
 	bar.ShowSpeed = true
 	bar.ShowFinalTime = true
 	bar.SetMaxWidth(1000)
+
+	if prefix != "" {
+		bar.Prefix(prefix)
+	}
 
 	return bar
 }
 
 //Download download data
 func Download(v Datum) error {
+	if !v.IsCanDL {
+		return errors.New("该课程目录未付费，或者不支持下载")
+	}
+
 	//按大到小排序
 	v.genSortedStreams()
 
@@ -42,7 +51,7 @@ func Download(v Datum) error {
 	}
 	// After the merge, the file size has changed, so we do not check whether the size matches
 	if mergedFileExists {
-		fmt.Printf("%s: file already exists, skipping\n", mergedFilePath)
+		// fmt.Printf("%s: file already exists, skipping\n", mergedFilePath)
 		return nil
 	}
 
@@ -50,7 +59,7 @@ func Download(v Datum) error {
 		return err
 	}
 
-	bar := progressBar(data.Size)
+	bar := progressBar(data.Size, title)
 	bar.Start()
 
 	chunkSizeMB := 1
@@ -70,10 +79,7 @@ func Download(v Datum) error {
 	lock := sync.Mutex{}
 	parts := make([]string, len(data.URLs))
 
-	fmt.Println("eeeeeeee", data.URLs)
 	for index, url := range data.URLs {
-		fmt.Println(errs)
-
 		if len(errs) > 0 {
 			break
 		}
@@ -81,7 +87,6 @@ func Download(v Datum) error {
 		partFileName := fmt.Sprintf("%s[%d]", title, index)
 		partFilePath, err := utils.FilePath(partFileName, url.Ext, false)
 		if err != nil {
-			fmt.Println(err)
 			return err
 		}
 		parts[index] = partFilePath
@@ -110,11 +115,9 @@ func Download(v Datum) error {
 		return nil
 	}
 
-	fmt.Println("aaa", mergedFilePath)
-
-	// // merge
+	// merge
 	// fmt.Printf("Merging video parts into %s\n", mergedFilePath)
-	// err = utils.MergeToMP4(parts, mergedFilePath, title)
+	err = utils.MergeToMP4(parts, mergedFilePath, title)
 
 	return err
 }
@@ -123,6 +126,14 @@ func Download(v Datum) error {
 func Save(
 	urlData URL, fileName string, bar *pb.ProgressBar, chunkSizeMB int,
 ) error {
+	if urlData.Size == 0 {
+		size, err := requester.Size(urlData.URL)
+		if err != nil {
+			return err
+		}
+		urlData.Size = size
+	}
+
 	var err error
 	filePath, err := utils.FilePath(fileName, urlData.Ext, false)
 	if err != nil {
@@ -133,7 +144,7 @@ func Save(
 		return err
 	}
 	if bar == nil {
-		bar = progressBar(urlData.Size)
+		bar = progressBar(urlData.Size, fileName)
 		bar.Start()
 	}
 	// Skip segment file
@@ -144,6 +155,7 @@ func Save(
 	}
 	tempFilePath := filePath + ".download"
 	tempFileSize, _, err := utils.FileSize(tempFilePath)
+
 	if err != nil {
 		return err
 	}

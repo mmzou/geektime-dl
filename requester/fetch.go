@@ -2,11 +2,14 @@ package requester
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -34,6 +37,32 @@ func Req(method string, urlStr string, post interface{}, header map[string]strin
 // Fetch 参见 *HTTPClient.Fetch, 使用默认 http 客户端
 func Fetch(method string, urlStr string, post interface{}, header map[string]string) ([]byte, error) {
 	return DefaultClient.Fetch(method, urlStr, post, header)
+}
+
+// Headers return the HTTP Headers of the url
+func Headers(url string) (http.Header, error) {
+	res, err := Req(http.MethodGet, url, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	return res.Header, nil
+}
+
+// Size get size of the url
+func Size(url string) (int, error) {
+	h, err := Headers(url)
+	if err != nil {
+		return 0, err
+	}
+	s := h.Get("Content-Length")
+	if s == "" {
+		return 0, errors.New("Content-Length is not present")
+	}
+	size, err := strconv.Atoi(s)
+	if err != nil {
+		return 0, err
+	}
+	return size, nil
 }
 
 // Req 实现 http／https 访问，
@@ -81,6 +110,8 @@ func (h *HTTPClient) Req(method string, urlStr string, post interface{}, header 
 			req.Header.Set(k, v)
 		}
 	}
+
+	h.SetTimeout(20 * time.Minute)
 
 	return h.Client.Do(req)
 }
