@@ -10,7 +10,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-//URL for url infomation
+//URL for url information
 type URL struct {
 	URL  string `json:"url"`
 	Size int    `json:"size"`
@@ -25,7 +25,7 @@ type Stream struct {
 	name    string
 }
 
-//Datum download infomation
+//Datum download information
 type Datum struct {
 	ID      int    `json:"id"`
 	Title   string `json:"title"`

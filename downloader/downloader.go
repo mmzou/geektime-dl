@@ -45,18 +45,19 @@ func Download(v Datum) error {
 
 	mergedFilePath, err := utils.FilePath(title, "mp4", false)
 
+	if err != nil {
+		return err
+	}
+
 	_, mergedFileExists, err := utils.FileSize(mergedFilePath)
 	if err != nil {
 		return err
 	}
+
 	// After the merge, the file size has changed, so we do not check whether the size matches
 	if mergedFileExists {
 		// fmt.Printf("%s: file already exists, skipping\n", mergedFilePath)
 		return nil
-	}
-
-	if err != nil {
-		return err
 	}
 
 	bar := progressBar(data.Size, title)

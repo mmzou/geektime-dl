@@ -37,7 +37,7 @@ var LoginConfig Login
 //NewLoginCommand login command
 func NewLoginCommand() []cli.Command {
 	return []cli.Command{
-		cli.Command{
+		{
 			Name:      "login",
 			Usage:     "Login geektime",
 			UsageText: appName + " login [OPTIONS]",
@@ -71,7 +71,7 @@ func NewLoginCommand() []cli.Command {
 			},
 			After: configSaveFunc,
 		},
-		cli.Command{
+		{
 			Name:        "who",
 			Usage:       "获取当前帐号",
 			UsageText:   appName + " who",
@@ -79,14 +79,14 @@ func NewLoginCommand() []cli.Command {
 			Action:      whoAction,
 			Before:      authorizationFunc,
 		},
-		cli.Command{
+		{
 			Name:        "users",
 			Usage:       "获取帐号列表",
 			UsageText:   appName + " users",
 			Description: "获取当前已登录的帐号列表",
 			Action:      usersAction,
 		},
-		cli.Command{
+		{
 			Name:        "su",
 			Usage:       "切换极客时间帐号",
 			UsageText:   appName + " su [UID]",

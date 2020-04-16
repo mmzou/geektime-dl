@@ -12,7 +12,7 @@ import (
 //NewBuyCommand login command
 func NewBuyCommand() []cli.Command {
 	return []cli.Command{
-		cli.Command{
+		{
 			Name:      "buy",
 			Usage:     "获取已购买过的专栏和视频课程",
 			UsageText: appName + " buy",

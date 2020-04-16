@@ -14,13 +14,13 @@ import (
 //NewCourseCommand login command
 func NewCourseCommand() []cli.Command {
 	return []cli.Command{
-		cli.Command{
+		{
 			Name:      "column",
 			Usage:     "获取专栏列表",
 			UsageText: appName + " column",
 			Action:    columnAction,
 		},
-		cli.Command{
+		{
 			Name:      "video",
 			Usage:     "获取视频课程列表",
 			UsageText: appName + " video",
