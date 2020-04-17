@@ -1,6 +1,7 @@
 ## geektime-dl
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/mmzou/geektime-dl)](https://goreportcard.com/report/github.com/mmzou/geektime-dl)
+[![GitHub release](https://img.shields.io/github/v/release/mmzou/geektime-dl.svg)](https://github.com/mmzou/geektime-dl/releases)
 
 👾 Geektime-dl 是使用Go构建的快速、简单的 [极客时间](https://time.geekbang.org/) 下载器.
 
