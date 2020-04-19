@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -28,7 +29,7 @@ func progressBar(size int, prefix string) *pb.ProgressBar {
 }
 
 //Download download data
-func Download(v Datum) error {
+func Download(v Datum, stream string) error {
 	if !v.IsCanDL {
 		return errors.New("该课程目录未付费，或者不支持下载")
 	}
@@ -37,10 +38,12 @@ func Download(v Datum) error {
 	v.genSortedStreams()
 
 	title := utils.FileName(v.Title, "")
-	stream := v.sortedStreams[0].name
-	data, ok := v.Streams[stream]
+	if stream == "" {
+		stream = v.sortedStreams[0].name
+	}
+	data, ok := v.Streams[strings.ToLower(stream)]
 	if !ok {
-		return fmt.Errorf("no stream named %s", stream)
+		return fmt.Errorf("指定要下载的类型不存在：%s", stream)
 	}
 
 	mergedFilePath, err := utils.FilePath(title, "mp4", false)

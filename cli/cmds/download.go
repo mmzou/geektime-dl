@@ -28,8 +28,6 @@ func NewDownloadCommand() []cli.Command {
 }
 
 func downloadAction(c *cli.Context) error {
-	showInfo := c.Parent().Bool("info")
-
 	args := c.Parent().Args()
 	cid, err := strconv.Atoi(args.First())
 	if err != nil {
@@ -51,10 +49,10 @@ func downloadAction(c *cli.Context) error {
 		return err
 	}
 
-	downloadData := extractDownloadData(course, articles, aid, showInfo)
+	downloadData := extractDownloadData(course, articles, aid)
 	// printExtractDownloadData(downloadData)
 
-	if showInfo {
+	if _info {
 		downloadData.PrintInfo()
 		return nil
 	}
@@ -64,7 +62,7 @@ func downloadAction(c *cli.Context) error {
 		if !datum.IsCanDL {
 			continue
 		}
-		if err := downloader.Download(datum); err != nil {
+		if err := downloader.Download(datum, _stream); err != nil {
 			errors = append(errors, err)
 		}
 	}
@@ -76,7 +74,7 @@ func downloadAction(c *cli.Context) error {
 	return nil
 }
 
-func extractDownloadData(course *service.Course, articles []*service.Article, aid int, showInfo bool) downloader.Data {
+func extractDownloadData(course *service.Course, articles []*service.Article, aid int) downloader.Data {
 	downloadData := downloader.Data{
 		Title: course.ColumnTitle,
 	}
@@ -152,7 +150,7 @@ func extractDownloadData(course *service.Course, articles []*service.Article, ai
 			videoData = append(videoData, datum)
 		}
 
-		if !showInfo {
+		if !_info {
 			wgp := utils.NewWaitGroupPool(10)
 			for _, datum := range videoData {
 				wgp.Add()

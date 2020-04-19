@@ -14,7 +14,9 @@ import (
 )
 
 var (
-	debug          bool
+	_debug         bool
+	_info          bool
+	_stream        string
 	appName        = filepath.Base(os.Args[0])
 	configSaveFunc = func(c *cli.Context) error {
 		err := config.Instance.Save()
@@ -46,18 +48,24 @@ func NewApp() *cli.App {
 	}
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
-			Name:        "debug",
+			Name:        "debug,d",
 			Usage:       "Turn on debug logs",
-			Destination: &debug,
+			Destination: &_debug,
 		},
 		cli.BoolFlag{
-			Name:  "info, i",
-			Usage: "只输出视频信息",
+			Name:        "info, i",
+			Usage:       "只输出视频信息",
+			Destination: &_info,
+		},
+		cli.StringFlag{
+			Name:        "stream, s",
+			Usage:       "选择要下载的指定类型",
+			Destination: &_stream,
 		},
 	}
 
 	app.Before = func(c *cli.Context) error {
-		if debug {
+		if _debug {
 			logrus.SetLevel(logrus.DebugLevel)
 		}
 		return nil
