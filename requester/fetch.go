@@ -121,7 +121,7 @@ func (h *HTTPClient) Req(method string, urlStr string, post interface{}, header 
 // urlStr (网址),
 // post (post 数据),
 // header (header 请求头数据), 进行网站访问。
-// 返回值分别为 *http.Response, 错误信息
+// 返回值分别为 []byte, 错误信息
 func (h *HTTPClient) Fetch(method string, urlStr string, post interface{}, header map[string]string) ([]byte, error) {
 	res, err := h.Req(method, urlStr, post, header)
 

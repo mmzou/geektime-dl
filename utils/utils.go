@@ -73,7 +73,7 @@ func FileSize(filePath string) (int, bool, error) {
 // M3u8URLs get all ts urls from m3u8 url
 func M3u8URLs(uri string) ([]string, error) {
 	if len(uri) == 0 {
-		return nil, errors.New("Url is null")
+		return nil, errors.New("M3u8地址为空")
 	}
 
 	html, err := requester.HTTPGet(uri)
