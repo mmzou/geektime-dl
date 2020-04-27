@@ -16,3 +16,8 @@ func Login(phone, password string) (gcess string, gcid string, serverID string, 
 
 	return result.Data.GCID, result.Data.GCESS, result.Data.ServerID, nil
 }
+
+//LoginedCookies get logined cookies
+func LoginedCookies() map[string]string {
+	return getService().Cookies()
+}

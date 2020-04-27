@@ -1,21 +1,24 @@
-package main
+package utils
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"log"
+	"strconv"
 	"time"
 
+	"github.com/chromedp/cdproto/cdp"
+	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/cdproto/runtime"
 	"github.com/chromedp/chromedp"
 	"github.com/chromedp/chromedp/device"
 )
 
-func main() {
-
+//PrintToPDF print pdf
+func PrintToPDF(aid int, filename string, cookies map[string]string) error {
 	var buf []byte
-
 	// create chrome instance
 	ctx, cancel := chromedp.NewContext(
 		context.Background(),
@@ -24,19 +27,15 @@ func main() {
 	defer cancel()
 
 	// create a timeout
-	ctx, cancel = context.WithTimeout(ctx, 15*time.Second)
+	ctx, cancel = context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
-	// navigate to a page, wait for an element, click
-	var example string
-
-	chromedp.Flag("disable-images", true)
 	err := chromedp.Run(ctx,
-
 		chromedp.Tasks{
 			chromedp.Emulate(device.IPhone7),
 			enableLifeCycleEvents(),
-			navigateAndWaitFor(`https://time.geekbang.org/column/article/225604`, "networkIdle"),
+			setCookies(cookies),
+			navigateAndWaitFor(`https://time.geekbang.org/column/article/`+strconv.Itoa(aid), "networkIdle"),
 			chromedp.ActionFunc(func(ctx context.Context) error {
 				s := `
 					document.querySelector('.iconfont').parentElement.parentElement.style.display='none';
@@ -60,25 +59,31 @@ func main() {
 				return err
 			}),
 		},
-
-		// chromedp.Emulate(device.IPhone7),
-		//访问打开必应页面
-		// chromedp.Navigate(`https://time.geekbang.org/column/article/225604`),
-		// chromedp.Text(`#app > div._3ADRghFH_0 > div > div._50pDbNcP_0._3O_7qs2p_0._2q1SuvsS_0 > div._50pDbNcP_0 > h1`, &example),
-		// chromedp.ActionFunc(func(ctx context.Context) error {
-		// 	time.Sleep(time.Second * 5)
-		// 	var err error
-		// 	buf, _, err = page.PrintToPDF().WithPrintBackground(true).Do(ctx)
-		// 	return err
-		// }),
 	)
+
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-	if err := ioutil.WriteFile("4.pdf", buf, 0644); err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("example: %s", example)
+
+	return ioutil.WriteFile(filename, buf, 0644)
+}
+
+func setCookies(cookies map[string]string) chromedp.ActionFunc {
+	return chromedp.ActionFunc(func(ctx context.Context) error {
+		expr := cdp.TimeSinceEpoch(time.Now().Add(180 * 24 * time.Hour))
+
+		for key, value := range cookies {
+			success, err := network.SetCookie(key, value).WithExpires(&expr).WithDomain(".geekbang.org").WithHTTPOnly(true).Do(ctx)
+			if err != nil {
+				return err
+			}
+
+			if !success {
+				return fmt.Errorf("could not set cookie %q to %q", key, value)
+			}
+		}
+		return nil
+	})
 }
 
 func enableLifeCycleEvents() chromedp.ActionFunc {
