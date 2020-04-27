@@ -39,7 +39,11 @@ func PrintToPDF(aid int, filename string, cookies map[string]string) error {
 			chromedp.ActionFunc(func(ctx context.Context) error {
 				s := `
 					document.querySelector('.iconfont').parentElement.parentElement.style.display='none';
-					document.querySelector('.bottom-wrapper').parentElement.style.display='none';
+					var bottom = document.querySelector('.bottom-wrapper');
+					if(bottom){
+						bottom.parentElement.style.display='none'
+					}
+					[...document.querySelectorAll('ul>li>div>div>div:nth-child(2)>span')].map(e=>e.click());
 				`
 				_, exp, err := runtime.Evaluate(s).Do(ctx)
 				if err != nil {
