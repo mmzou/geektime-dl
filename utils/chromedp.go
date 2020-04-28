@@ -16,8 +16,8 @@ import (
 	"github.com/chromedp/chromedp/device"
 )
 
-//PrintToPDF print pdf
-func PrintToPDF(aid int, filename string, cookies map[string]string) error {
+//ColumnPrintToPDF print pdf
+func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error {
 	var buf []byte
 	// create chrome instance
 	ctx, cancel := chromedp.NewContext(
@@ -57,7 +57,7 @@ func PrintToPDF(aid int, filename string, cookies map[string]string) error {
 				return nil
 			}),
 			chromedp.ActionFunc(func(ctx context.Context) error {
-				time.Sleep(time.Second * 5)
+				// time.Sleep(time.Second * 5)
 				var err error
 				buf, _, err = page.PrintToPDF().WithPrintBackground(true).Do(ctx)
 				return err

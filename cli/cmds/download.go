@@ -71,6 +71,21 @@ func downloadAction(c *cli.Context) error {
 		return errors[0]
 	}
 
+	//如果是专栏，则需要打印内容
+	if course.IsColumn() {
+		path, err := utils.Mkdir(utils.FileName(course.ColumnTitle, ""), "PDF")
+		if err != nil {
+			return err
+		}
+		cookies := application.LoginedCookies()
+		for _, datum := range downloadData.Data {
+			err := downloader.PrintToPDF(datum, cookies, path)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	return nil
 }
 
