@@ -58,6 +58,15 @@ func FilePath(name, ext string, escape bool) (string, error) {
 	return outputPath, nil
 }
 
+//Mkdir mkdir path
+func Mkdir(elem ...string) (string, error) {
+	path := filepath.Join(elem...)
+
+	err := os.MkdirAll(path, os.ModePerm)
+
+	return path, err
+}
+
 // FileSize return the file size of the specified path file
 func FileSize(filePath string) (int, bool, error) {
 	file, err := os.Stat(filePath)

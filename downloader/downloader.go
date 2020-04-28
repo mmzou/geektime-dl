@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -29,7 +30,7 @@ func progressBar(size int, prefix string) *pb.ProgressBar {
 }
 
 //Download download data
-func Download(v Datum, stream string) error {
+func Download(v Datum, stream string, path string) error {
 	if !v.IsCanDL {
 		return errors.New("该课程目录未付费，或者不支持下载")
 	}
@@ -48,11 +49,13 @@ func Download(v Datum, stream string) error {
 
 	mergedFilePath, err := utils.FilePath(title, "mp4", false)
 
+	fileName := filepath.Join(path, mergedFilePath)
+
 	if err != nil {
 		return err
 	}
 
-	_, mergedFileExists, err := utils.FileSize(mergedFilePath)
+	_, mergedFileExists, err := utils.FileSize(fileName)
 	if err != nil {
 		return err
 	}
@@ -69,7 +72,7 @@ func Download(v Datum, stream string) error {
 	chunkSizeMB := 1
 
 	if len(data.URLs) == 1 {
-		err := Save(data.URLs[0], title, bar, chunkSizeMB)
+		err := Save(data.URLs[0], fileName, bar, chunkSizeMB)
 		if err != nil {
 			return err
 		}
@@ -88,7 +91,7 @@ func Download(v Datum, stream string) error {
 			break
 		}
 
-		partFileName := fmt.Sprintf("%s[%d]", title, index)
+		partFileName := fmt.Sprintf("%s[%d]", fileName, index)
 		partFilePath, err := utils.FilePath(partFileName, url.Ext, false)
 		if err != nil {
 			return err
@@ -121,7 +124,7 @@ func Download(v Datum, stream string) error {
 
 	// merge
 	// fmt.Printf("Merging video parts into %s\n", mergedFilePath)
-	err = utils.MergeToMP4(parts, mergedFilePath, title)
+	err = utils.MergeToMP4(parts, fileName, title)
 
 	return err
 }

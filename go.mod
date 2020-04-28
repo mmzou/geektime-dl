@@ -4,6 +4,8 @@ go 1.14
 
 require (
 	github.com/cheggaaa/pb v1.0.25
+	github.com/chromedp/cdproto v0.0.0-20200116234248-4da64dd111ac
+	github.com/chromedp/chromedp v0.5.3
 	github.com/fatih/color v1.9.0
 	github.com/json-iterator/go v1.1.9
 	github.com/olekukonko/tablewriter v0.0.4
