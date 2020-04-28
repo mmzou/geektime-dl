@@ -27,7 +27,7 @@ func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error
 	defer cancel()
 
 	// create a timeout
-	ctx, cancel = context.WithTimeout(ctx, 30*time.Second)
+	ctx, cancel = context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()
 
 	err := chromedp.Run(ctx,
