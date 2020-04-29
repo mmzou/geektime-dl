@@ -129,12 +129,15 @@ func extractColumnDownloadData(articles []*service.Article, aid int) []downloade
 		if aid > 0 && article.ID != aid {
 			continue
 		}
-		urls := []downloader.URL{
-			{
-				URL:  article.AudioDownloadURL,
-				Size: article.AudioSize,
-				Ext:  "mp3",
-			},
+		urls := []downloader.URL{}
+		if article.AudioDownloadURL != "" {
+			urls = []downloader.URL{
+				{
+					URL:  article.AudioDownloadURL,
+					Size: article.AudioSize,
+					Ext:  "mp3",
+				},
+			}
 		}
 
 		streams := map[string]downloader.Stream{

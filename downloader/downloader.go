@@ -47,6 +47,11 @@ func Download(v Datum, stream string, path string) error {
 		return fmt.Errorf("指定要下载的类型不存在：%s", stream)
 	}
 
+	//判断下载连接是否存在
+	if len(data.URLs) == 0 {
+		return nil
+	}
+
 	mergedFilePath, err := utils.FilePath(title, "mp4", false)
 
 	fileName := filepath.Join(path, mergedFilePath)
