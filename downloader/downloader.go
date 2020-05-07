@@ -52,9 +52,8 @@ func Download(v Datum, stream string, path string) error {
 		return nil
 	}
 
-	mergedFilePath, err := utils.FilePath(title, "mp4", false)
-
-	fileName := filepath.Join(path, mergedFilePath)
+	filePreName := filepath.Join(path, title)
+	fileName, err := utils.FilePath(filePreName, "mp4", false)
 
 	if err != nil {
 		return err
@@ -77,7 +76,7 @@ func Download(v Datum, stream string, path string) error {
 	chunkSizeMB := 1
 
 	if len(data.URLs) == 1 {
-		err := Save(data.URLs[0], fileName, bar, chunkSizeMB)
+		err := Save(data.URLs[0], filePreName, bar, chunkSizeMB)
 		if err != nil {
 			return err
 		}
@@ -96,7 +95,7 @@ func Download(v Datum, stream string, path string) error {
 			break
 		}
 
-		partFileName := fmt.Sprintf("%s[%d]", fileName, index)
+		partFileName := fmt.Sprintf("%s[%d]", filePreName, index)
 		partFilePath, err := utils.FilePath(partFileName, url.Ext, false)
 		if err != nil {
 			return err
