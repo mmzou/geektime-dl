@@ -223,6 +223,12 @@ func extractVideoDownloadData(articles []*service.Article, aid int) []downloader
 							datum.Streams[key] = stream
 						}
 					}
+
+					for k, v := range datum.Streams {
+						if len(v.URLs) == 0 {
+							delete(datum.Streams, k)
+						}
+					}
 				}
 			}(datum, videoIds)
 		}

@@ -61,7 +61,7 @@ func TestMkdir(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, _ := Mkdir(tt.path)
+			got, _ := Mkdir(tt.path...)
 
 			if runtime.GOOS == "windows" {
 				if got != tt.wantWin {

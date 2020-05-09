@@ -21,7 +21,7 @@ func FileName(name string, ext string) string {
 	name = rep.Replace(name)
 
 	if runtime.GOOS == "windows" {
-		rep := strings.NewReplacer("\"", " ", "?", " ", "*", " ", "\\", " ", "<", " ", ">", " ")
+		rep := strings.NewReplacer("\"", " ", "?", " ", "*", " ", "\\", " ", "<", " ", ">", " ", ":", " ", "：", " ")
 		name = rep.Replace(name)
 	}
 
