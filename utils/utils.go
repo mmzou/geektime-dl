@@ -25,6 +25,8 @@ func FileName(name string, ext string) string {
 		name = rep.Replace(name)
 	}
 
+	name = strings.TrimSpace(name)
+
 	limitedName := LimitLength(name, MAXLENGTH)
 	if ext != "" {
 		return fmt.Sprintf("%s.%s", limitedName, ext)

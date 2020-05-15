@@ -1,6 +1,8 @@
 package application
 
 import (
+	"strings"
+
 	"github.com/mmzou/geektime-dl/service"
 )
 
@@ -20,6 +22,8 @@ func CourseWithArticles(id int) (*service.Course, []*service.Article, error) {
 	if err != nil {
 		return nil, nil, err
 	}
+
+	course.ColumnTitle = strings.TrimSpace(course.ColumnTitle)
 
 	articles, err := getService().Articles(id)
 	if err != nil {
