@@ -17,7 +17,7 @@ const MAXLENGTH = 80
 
 //FileName filter invalid string
 func FileName(name string, ext string) string {
-	rep := strings.NewReplacer("\n", " ", "/", " ", "|", "-", ": ", "：", ":", "：", "'", "’")
+	rep := strings.NewReplacer("\n", " ", "/", " ", "|", "-", ": ", "：", ":", "：", "'", "’", "\t", " ")
 	name = rep.Replace(name)
 
 	if runtime.GOOS == "windows" {
