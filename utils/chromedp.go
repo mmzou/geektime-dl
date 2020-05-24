@@ -57,6 +57,28 @@ func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error
 				return nil
 			}),
 			chromedp.ActionFunc(func(ctx context.Context) error {
+				s := `
+					var divs = document.getElementsByTagName('div');
+					for (var i = 0; i < divs.length; ++i){
+						if(divs[i].innerText === "打开APP"){
+							divs[i].parentNode.parentNode.style.display="none";
+							break;
+						}
+					}
+				`
+				_, exp, err := runtime.Evaluate(s).Do(ctx)
+				if err != nil {
+					return err
+				}
+
+				if exp != nil {
+					return exp
+				}
+
+				return nil
+			}),
+
+			chromedp.ActionFunc(func(ctx context.Context) error {
 				// time.Sleep(time.Second * 5)
 				var err error
 				buf, _, err = page.PrintToPDF().WithPrintBackground(true).Do(ctx)
