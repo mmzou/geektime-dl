@@ -37,8 +37,20 @@ func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error
 			setCookies(cookies),
 			navigateAndWaitFor(`https://time.geekbang.org/column/article/`+strconv.Itoa(aid), "networkIdle"),
 			chromedp.ActionFunc(func(ctx context.Context) error {
+				time.Sleep(time.Second * 5)
 				s := `
-					document.querySelector('.iconfont').parentElement.parentElement.style.display='none';
+					var iconfontDivs = document.querySelectorAll('.iconfont')
+					iconfontDivs[0].parentElement.parentElement.style.display='none';
+					iconfontDivs[5].parentElement.parentElement.style.display='none';
+					iconfontDivs[6].parentElement.parentElement.style.display='none';
+					iconfontDivs[7].style.display='none';
+					var as = document.getElementsByTagName('a');
+					for (var i = 0; i < as.length; ++i){
+						if(as[i].innerText === "提建议"){
+							as[i].parentNode.parentNode.style.display="none";
+							break;
+						}
+					}
 					var bottom = document.querySelector('.bottom-wrapper');
 					if(bottom){
 						bottom.parentElement.style.display='none'
@@ -56,7 +68,7 @@ func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error
 
 				return nil
 			}),
-			chromedp.ActionFunc(func(ctx context.Context) error {
+			/*chromedp.ActionFunc(func(ctx context.Context) error {
 				s := `
 					var divs = document.getElementsByTagName('div');
 					for (var i = 0; i < divs.length; ++i){
@@ -76,10 +88,10 @@ func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error
 				}
 
 				return nil
-			}),
+			}),*/
 
 			chromedp.ActionFunc(func(ctx context.Context) error {
-				// time.Sleep(time.Second * 5)
+				time.Sleep(time.Second * 10)
 				var err error
 				buf, _, err = page.PrintToPDF().WithPrintBackground(true).Do(ctx)
 				return err
