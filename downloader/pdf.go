@@ -18,7 +18,7 @@ func PrintToPDF(v Datum, cookies map[string]string, path string) error {
 	_, exist, err := utils.FileSize(filename)
 
 	if err != nil {
-		fmt.Printf("\033[31;1m%s\033[0m\n", "失败")
+		fmt.Printf("\033[31;1m%s, err=%v\033[0m\n", "失败1", err)
 		return err
 	}
 
@@ -30,7 +30,7 @@ func PrintToPDF(v Datum, cookies map[string]string, path string) error {
 	err = utils.ColumnPrintToPDF(v.ID, filename, cookies)
 
 	if err != nil {
-		fmt.Printf("\033[31;1m%s\033[0m\n", "失败")
+		fmt.Printf("\033[31;1m%s, err=%v\033[0m\n", "失败2", err)
 		return err
 	}
 

@@ -2,7 +2,6 @@ package utils
 
 import (
 	"context"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -35,7 +34,7 @@ func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error
 			chromedp.Emulate(device.IPhone7),
 			enableLifeCycleEvents(),
 			setCookies(cookies),
-			navigateAndWaitFor(`https://time.geekbang.org/column/article/`+strconv.Itoa(aid), "networkIdle"),
+			navigateAndWaitFor(`https://time.geekbang.org/column/article/`+strconv.Itoa(aid), "firstMeaningfulPaint"),
 			chromedp.ActionFunc(func(ctx context.Context) error {
 				s := `
 					document.querySelector('.iconfont').parentElement.parentElement.style.display='none';
@@ -99,13 +98,9 @@ func setCookies(cookies map[string]string) chromedp.ActionFunc {
 		expr := cdp.TimeSinceEpoch(time.Now().Add(180 * 24 * time.Hour))
 
 		for key, value := range cookies {
-			success, err := network.SetCookie(key, value).WithExpires(&expr).WithDomain(".geekbang.org").WithHTTPOnly(true).Do(ctx)
+			err := network.SetCookie(key, value).WithExpires(&expr).WithDomain(".geekbang.org").WithHTTPOnly(true).Do(ctx)
 			if err != nil {
 				return err
-			}
-
-			if !success {
-				return fmt.Errorf("could not set cookie %q to %q", key, value)
 			}
 		}
 		return nil
