@@ -17,6 +17,8 @@ var (
 	_debug         bool
 	_info          bool
 	_stream        string
+	_pdf           bool
+	_mp3           bool
 	appName        = filepath.Base(os.Args[0])
 	configSaveFunc = func(c *cli.Context) error {
 		err := config.Instance.Save()
@@ -61,6 +63,16 @@ func NewApp() *cli.App {
 			Name:        "stream, s",
 			Usage:       "选择要下载的指定类型",
 			Destination: &_stream,
+		},
+		cli.BoolFlag{
+			Name:        "pdf, p",
+			Usage:       "下载专栏PDF文档",
+			Destination: &_pdf,
+		},
+		cli.BoolFlag{
+			Name:        "mp3, m",
+			Usage:       "下载专栏MP3音频",
+			Destination: &_mp3,
 		},
 	}
 

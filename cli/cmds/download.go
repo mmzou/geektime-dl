@@ -57,29 +57,43 @@ func downloadAction(c *cli.Context) error {
 		return nil
 	}
 
-	sub := "MP4"
-	if course.IsColumn() {
-		sub = "MP3"
+	// 专栏下载时，如果没有指定pdf和mp3，则默认同时下载
+	if course.IsColumn() && !_pdf && !_mp3 {
+		_pdf = true
+		_mp3 = true
 	}
-
-	path, err := utils.Mkdir(utils.FileName(course.ColumnTitle, ""), sub)
 
 	errors := make([]error, 0)
-	for _, datum := range downloadData.Data {
-		if !datum.IsCanDL {
-			continue
-		}
-		if err := downloader.Download(datum, _stream, path); err != nil {
-			errors = append(errors, err)
-		}
-	}
 
-	if len(errors) > 0 {
-		return errors[0]
+	// 视频或者音频下载
+	if course.IsVideo() || (course.IsColumn() && _mp3) {
+		sub := "MP4"
+		if course.IsColumn() {
+			sub = "MP3"
+		}
+
+		// 创建文件夹
+		path, err := utils.Mkdir(utils.FileName(course.ColumnTitle, ""), sub)
+		if err != nil {
+			return err
+		}
+
+		for _, datum := range downloadData.Data {
+			if !datum.IsCanDL {
+				continue
+			}
+			if err := downloader.Download(datum, _stream, path); err != nil {
+				errors = append(errors, err)
+			}
+		}
+
+		if len(errors) > 0 {
+			return errors[0]
+		}
 	}
 
 	//如果是专栏，则需要打印内容
-	if course.IsColumn() {
+	if course.IsColumn() && _pdf {
 		path, err := utils.Mkdir(utils.FileName(course.ColumnTitle, ""), "PDF")
 		if err != nil {
 			return err

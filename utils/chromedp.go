@@ -26,7 +26,7 @@ func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error
 	defer cancel()
 
 	// create a timeout
-	ctx, cancel = context.WithTimeout(ctx, 60*time.Second)
+	ctx, cancel = context.WithTimeout(ctx, 120*time.Second)
 	defer cancel()
 
 	err := chromedp.Run(ctx,
@@ -37,10 +37,11 @@ func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error
 			navigateAndWaitFor(`https://time.geekbang.org/column/article/`+strconv.Itoa(aid), "firstMeaningfulPaint"),
 			chromedp.ActionFunc(func(ctx context.Context) error {
 				s := `
-					document.querySelector('.iconfont').parentElement.parentElement.style.display='none';
-					var bottom = document.querySelector('.bottom-wrapper');
+				document.querySelector('.iconfont').parentElement.parentElement.style.display='none';
+				document.querySelector('.Index_white_1gqaD>div.iconfont').style.display='none';
+				var bottom = document.querySelector('.sub-bottom-wrapper');
 					if(bottom){
-						bottom.parentElement.style.display='none'
+						bottom.style.display='none'
 					}
 					[...document.querySelectorAll('ul>li>div>div>div:nth-child(2)>span')].map(e=>e.click());
 				`
