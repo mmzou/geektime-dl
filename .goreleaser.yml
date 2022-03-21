@@ -24,6 +24,8 @@ builds:
     - goos: openbsd
       goarch: arm
       goarm: 6
+    - goos: darwin 
+      goarch: 386
 changelog:
   sort: asc
   filters:
