@@ -98,13 +98,19 @@ func downloadAction(c *cli.Context) error {
 		if err != nil {
 			return err
 		}
-		cookies := application.LoginedCookies()
-		for _, datum := range downloadData.Data {
-			if !datum.IsCanDL {
-				continue
-			}
-			if err := downloader.PrintToPDF(datum, cookies, path); err != nil {
-				errors = append(errors, err)
+
+		if err := utils.InitChromedp(); err != nil {
+			errors = append(errors, err)
+		} else {
+			defer utils.CancelChromedp()
+			cookies := application.LoginedCookies()
+			for _, datum := range downloadData.Data {
+				if !datum.IsCanDL {
+					continue
+				}
+				if err := downloader.PrintToPDF(datum, cookies, path); err != nil {
+					errors = append(errors, err)
+				}
 			}
 		}
 	}

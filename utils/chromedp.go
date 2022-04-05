@@ -15,18 +15,33 @@ import (
 	"github.com/chromedp/chromedp/device"
 )
 
-//ColumnPrintToPDF print pdf
-func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error {
-	var buf []byte
+var (
+	pctx    context.Context
+	pcancel context.CancelFunc
+)
+
+//InitChromedp init chromedp
+func InitChromedp() error {
 	// create chrome instance
-	ctx, cancel := chromedp.NewContext(
+	pctx, pcancel = chromedp.NewContext(
 		context.Background(),
 		chromedp.WithLogf(log.Printf),
 	)
-	defer cancel()
+
+	return chromedp.Run(pctx)
+}
+
+//CancelChromedp close chromedp
+func CancelChromedp() {
+	pcancel()
+}
+
+//ColumnPrintToPDF print pdf
+func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error {
+	var buf []byte
 
 	// create a timeout
-	ctx, cancel = context.WithTimeout(ctx, 120*time.Second)
+	ctx, cancel := context.WithTimeout(pctx, 120*time.Second)
 	defer cancel()
 
 	err := chromedp.Run(ctx,
@@ -34,7 +49,7 @@ func ColumnPrintToPDF(aid int, filename string, cookies map[string]string) error
 			chromedp.Emulate(device.IPhone7),
 			enableLifeCycleEvents(),
 			setCookies(cookies),
-			navigateAndWaitFor(`https://time.geekbang.org/column/article/`+strconv.Itoa(aid), "firstMeaningfulPaint"),
+			navigateAndWaitFor(`https://time.geekbang.org/column/article/`+strconv.Itoa(aid), "networkIdle"),
 			chromedp.ActionFunc(func(ctx context.Context) error {
 				s := `
 				document.querySelector('.iconfont').parentElement.parentElement.style.display='none';

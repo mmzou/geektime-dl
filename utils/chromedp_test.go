@@ -7,6 +7,8 @@ import (
 
 func TestPrintToPdf(t *testing.T) {
 	filename := "file.pdf"
+	InitChromedp()
+	defer CancelChromedp()
 	err := ColumnPrintToPDF(185527, filename, nil)
 
 	if err != nil {
