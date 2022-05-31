@@ -5,10 +5,14 @@ github.com/chromedp/cdproto v0.0.0-20210104223854-2cc87dae3ee3 h1:XeGYLuu3Yu3/2/
 github.com/chromedp/cdproto v0.0.0-20210104223854-2cc87dae3ee3/go.mod h1:55pim6Ht4LJKdVLlyFJV/g++HsEA1hQxPbB5JyNdZC0=
 github.com/chromedp/cdproto v0.0.0-20210713064928-7d28b402946a h1:B6EyBXuMsFyrUoBrNXdt+Vf3vQNpN4DU/Xv96R4BdFg=
 github.com/chromedp/cdproto v0.0.0-20210713064928-7d28b402946a/go.mod h1:At5TxYYdxkbQL0TSefRjhLE3Q0lgvqKKMSFUglJ7i1U=
+github.com/chromedp/cdproto v0.0.0-20220515234810-83d799542a04 h1:8GLetRp0N/g2MVzUmFRBXgLJTPofYAdTyWNR2lC0EQM=
+github.com/chromedp/cdproto v0.0.0-20220515234810-83d799542a04/go.mod h1:5Y4sD/eXpwrChIuxhSr/G20n9CdbCmoerOHnuAf0Zr0=
 github.com/chromedp/chromedp v0.6.0 h1:jjzHzXW5pNdKt1D9cEDAKZM/yZ2EwL/hLyGbCUFldBI=
 github.com/chromedp/chromedp v0.6.0/go.mod h1:Yay7TUDCNOQBK8EJDUon6AUaQI12VEBOuULcGtY4uDY=
 github.com/chromedp/chromedp v0.7.4 h1:U+0d3WbB/Oj4mDuBOI0P7S3PJEued5UZIl5AJ3QulwU=
 github.com/chromedp/chromedp v0.7.4/go.mod h1:dBj+SXuQHznp6ZPwZeDDEBZKwclUwDLbZ0hjMialMYs=
+github.com/chromedp/chromedp v0.8.2 h1:EYSsSqWuKYwyHZEJpU00kOGOMz5DE0qDVckelzauMFA=
+github.com/chromedp/chromedp v0.8.2/go.mod h1:vpbCNtfYeOUo2q5reuwX6ZmPpbHRf5PZfAqNR2ObB+g=
 github.com/chromedp/sysutil v1.0.0 h1:+ZxhTpfpZlmchB58ih/LBHX52ky7w2VhQVKQMucy3Ic=
 github.com/chromedp/sysutil v1.0.0/go.mod h1:kgWmDdq8fTzXYcKIBqIYvRRTnYb9aNS9moAV0xufSww=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d h1:U+s90UTSYgptZMwQh2aRr3LuazLJIa+Pg3Kc1ylSYVY=
@@ -62,5 +66,7 @@ golang.org/x/sys v0.0.0-20210104204734-6f8348627aad h1:MCsdmFSdEd4UEa5TKS5JztCRH
 golang.org/x/sys v0.0.0-20210104204734-6f8348627aad/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea h1:+WiDlPBBaO+h9vPNZi8uJ3k4BkKQB7Iow3aqwHVA5hI=
 golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a h1:dGzPydgVsqGcTRVwiLJ1jVbufYwmzD3LfVPLKsKg+0k=
+golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
