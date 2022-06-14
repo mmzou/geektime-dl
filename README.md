@@ -7,10 +7,12 @@
 
 ### `视频下载已失效`: 极客时间的视频是采用的阿里云视频私有加密方式，暂时无破解方法！
 
+- [geektime-dl](#geektime-dl)
+  - [`视频下载已失效`: 极客时间的视频是采用的阿里云视频私有加密方式，暂时无破解方法！](#视频下载已失效-极客时间的视频是采用的阿里云视频私有加密方式暂时无破解方法)
 - [安装](#安装)
   - [必要条件](#必要条件)
-  - [使用`go get`安装](#%e4%bd%bf%e7%94%a8go-get%e5%ae%89%e8%a3%85)
-- [入门](#%e5%85%a5%e9%97%a8)
+  - [使用`go get`安装](#使用go-get安装)
+- [入门](#入门)
   - [视频和专栏的下载](#视频和专栏的下载)
   - [查看视频或专栏列表](#查看视频或专栏列表)
   - [可恢复继续下载](#可恢复继续下载)
@@ -37,6 +39,9 @@
 安装Geektime-dl，可以使用如下`go get`命令，或者从[Releases](https://github.com/mmzou/geektime-dl/releases) 页面下载二进制文件.
 
 ```bash
+# Go 1.16+
+$ go install github.com/mmzou/geektime-dl@latest
+# Go version < 1.16+
 $ go get github.com/mmzou/geektime-dl
 ```
 
