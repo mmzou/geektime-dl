@@ -19,6 +19,7 @@ var (
 	_stream        string
 	_pdf           bool
 	_mp3           bool
+	_markdown      bool
 	appName        = filepath.Base(os.Args[0])
 	configSaveFunc = func(c *cli.Context) error {
 		err := config.Instance.Save()
@@ -39,7 +40,7 @@ var (
 	}
 )
 
-//NewApp cli app
+// NewApp cli app
 func NewApp() *cli.App {
 	app := cli.NewApp()
 	app.Name = appName
@@ -74,6 +75,11 @@ func NewApp() *cli.App {
 			Usage:       "下载专栏MP3音频",
 			Destination: &_mp3,
 		},
+		cli.BoolFlag{
+			Name:        "markdown, md",
+			Usage:       "下载专栏markdown文档",
+			Destination: &_markdown,
+		},
 	}
 
 	app.Before = func(c *cli.Context) error {
@@ -86,7 +92,7 @@ func NewApp() *cli.App {
 	return app
 }
 
-//DefaultAction default action
+// DefaultAction default action
 func DefaultAction(c *cli.Context) error {
 	if len(c.Args()) == 0 {
 		cli.ShowAppHelp(c)

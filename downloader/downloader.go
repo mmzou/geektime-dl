@@ -29,13 +29,13 @@ func progressBar(size int, prefix string) *pb.ProgressBar {
 	return bar
 }
 
-//Download download data
+// Download download data
 func Download(v Datum, stream string, path string) error {
 	if !v.IsCanDL {
 		return errors.New("该课程目录未付费，或者不支持下载")
 	}
 
-	//按大到小排序
+	// 按大到小排序
 	v.genSortedStreams()
 
 	title := utils.FileName(v.Title, "")
@@ -47,7 +47,7 @@ func Download(v Datum, stream string, path string) error {
 		return fmt.Errorf("指定要下载的类型不存在：%s", stream)
 	}
 
-	//判断下载连接是否存在
+	// 判断下载连接是否存在
 	if len(data.URLs) == 0 {
 		return nil
 	}

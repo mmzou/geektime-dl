@@ -14,7 +14,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-//NewDownloadCommand login command
+// NewDownloadCommand login command
 func NewDownloadCommand() []cli.Command {
 	return []cli.Command{
 		{
@@ -35,7 +35,7 @@ func downloadAction(c *cli.Context) error {
 		return errors.New("请输入课程ID")
 	}
 
-	//课程目录ID
+	// 课程目录ID
 	aid := 0
 	if len(args) > 1 {
 		aid, err = strconv.Atoi(args.Get(1))
@@ -57,10 +57,9 @@ func downloadAction(c *cli.Context) error {
 		return nil
 	}
 
-	// 专栏下载时，如果没有指定pdf和mp3，则默认同时下载
-	if course.IsColumn() && !_pdf && !_mp3 {
-		_pdf = true
-		_mp3 = true
+	// 专栏下载时，如果没有指定pdf/mp3/markdown ，则默认同时下载
+	if course.IsColumn() && !_pdf && !_mp3 && !_markdown {
+		_pdf, _mp3, _markdown = true, true, true
 	}
 
 	errors := make([]error, 0)
@@ -92,7 +91,7 @@ func downloadAction(c *cli.Context) error {
 		}
 	}
 
-	//如果是专栏，则需要打印内容
+	// 如果是专栏，则需要打印内容
 	if course.IsColumn() && _pdf {
 		path, err := utils.Mkdir(utils.FileName(course.ColumnTitle, ""), "PDF")
 		if err != nil {
@@ -115,6 +114,24 @@ func downloadAction(c *cli.Context) error {
 		}
 	}
 
+	// 如果是专栏，则需要打印内容
+	if course.IsColumn() && _markdown {
+		path, err := utils.Mkdir(utils.FileName(course.ColumnTitle, ""), "MD")
+		if err != nil {
+			return err
+		}
+
+		for _, datum := range downloadData.Data {
+			if !datum.IsCanDL {
+				continue
+			}
+
+			if err := downloader.PrintToMarkdown(datum, path); err != nil {
+				errors = append(errors, err)
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return errors[0]
 	}
@@ -122,7 +139,7 @@ func downloadAction(c *cli.Context) error {
 	return nil
 }
 
-//生成下载数据
+// 生成下载数据
 func extractDownloadData(course *service.Course, articles []*service.Article, aid int) downloader.Data {
 
 	downloadData := downloader.Data{
@@ -140,7 +157,7 @@ func extractDownloadData(course *service.Course, articles []*service.Article, ai
 	return downloadData
 }
 
-//生成专栏下载数据
+// 生成专栏下载数据
 func extractColumnDownloadData(articles []*service.Article, aid int) []downloader.Datum {
 	data := downloader.EmptyData
 
@@ -149,7 +166,7 @@ func extractColumnDownloadData(articles []*service.Article, aid int) []downloade
 		if aid > 0 && article.ID != aid {
 			continue
 		}
-		urls := []downloader.URL{}
+		var urls []downloader.URL
 		if article.AudioDownloadURL != "" {
 			urls = []downloader.URL{
 				{
@@ -180,7 +197,7 @@ func extractColumnDownloadData(articles []*service.Article, aid int) []downloade
 	return data
 }
 
-//生成视频下载数据
+// 生成视频下载数据
 func extractVideoDownloadData(articles []*service.Article, aid int) []downloader.Datum {
 	data := downloader.EmptyData
 
@@ -198,7 +215,7 @@ func extractVideoDownloadData(articles []*service.Article, aid int) []downloader
 		videoMediaMaps := &map[string]downloader.VideoMediaMap{}
 		utils.UnmarshalJSON(article.VideoMediaMap, videoMediaMaps)
 
-		urls := []downloader.URL{}
+		var urls []downloader.URL
 
 		streams := map[string]downloader.Stream{}
 		for key, videoMediaMap := range *videoMediaMaps {

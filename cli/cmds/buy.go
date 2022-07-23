@@ -9,7 +9,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-//NewBuyCommand login command
+// NewBuyCommand login command
 func NewBuyCommand() []cli.Command {
 	return []cli.Command{
 		{
