@@ -31,7 +31,10 @@ func downloadAction(c *cli.Context) error {
 	args := c.Parent().Args()
 	cid, err := strconv.Atoi(args.First())
 	if err != nil {
-		cli.ShowCommandHelp(c, "download")
+		err = cli.ShowCommandHelp(c, "download")
+		if err != nil {
+			return err
+		}
 		return errors.New("请输入课程ID")
 	}
 

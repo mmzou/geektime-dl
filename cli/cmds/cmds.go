@@ -95,8 +95,8 @@ func NewApp() *cli.App {
 // DefaultAction default action
 func DefaultAction(c *cli.Context) error {
 	if len(c.Args()) == 0 {
-		cli.ShowAppHelp(c)
-		return nil
+		err := cli.ShowAppHelp(c)
+		return err
 	}
 
 	dlc := &NewDownloadCommand()[0]

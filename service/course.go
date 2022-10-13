@@ -153,12 +153,12 @@ func (s *Service) Articles(id int) ([]*Article, error) {
 	}
 	defer body.Close()
 
-	articleResult := &articleResult{}
-	if err := handleJSONParse(body, articleResult); err != nil {
+	articleRes := &articleResult{}
+	if err = handleJSONParse(body, articleRes); err != nil {
 		return nil, err
 	}
 
-	return articleResult.Articles, nil
+	return articleRes.Articles, nil
 }
 
 // VideoPlayAuth 获取视频的播放授权信息

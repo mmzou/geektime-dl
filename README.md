@@ -45,7 +45,7 @@ $ go get github.com/mmzou/geektime-dl
 使用方法:
 
 ```bash
-#下载
+#下载, 不写可选项则 pdf, mp3, markdown 类型全都下载
 geektime-dl [OPTIONS] 课程ID  [目录ID]
 #查看专栏、视频，登录及其他命令操作
 geektime-dl [OPTIONS] command
@@ -54,14 +54,25 @@ geektime-dl [OPTIONS] command
 包含命令
 
 ```text
-  login    登录极客时间
-  who      获取当前帐号
-  users    获取帐号列表
-  su       切换极客时间帐号
-  buy      获取已购买过的专栏和视频课程
-  column   获取专栏列表
-  video    获取视频课程列表
-  help, h  帮助
+COMMANDS:
+   login    Login geektime
+   who      获取当前帐号
+   users    获取帐号列表
+   su       切换极客时间帐号
+   buy      获取已购买过的专栏和视频课程
+   column   获取专栏列表
+   video    获取视频课程列表
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --debug, -d               Turn on debug logs
+   --info, -i                只输出视频信息
+   --stream value, -s value  选择要下载的指定类型
+   --pdf, -p                 下载专栏PDF文档
+   --mp3, -m                 下载专栏MP3音频
+   --markdown, --md          下载专栏markdown文档
+   --help, -h                show help
+   --version, -v             print the version
 ```
 
 

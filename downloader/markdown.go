@@ -72,7 +72,7 @@ func PrintToMarkdown(v Datum, path string) error {
 
 func contentsToMarkdown(title, content string) (res string) {
 	res += getMdHeader(1) + title + "\r\n\r\n"
-	res += content + "\r\n\r\n"
+	res += utils.Html2Md(content) + "\r\n\r\n"
 	res += "---\r\n\r\n"
 	return
 }
@@ -111,20 +111,16 @@ func articleCommentsToMarkdown(content *service.CommentList) (res string) {
 }
 
 func getMdHeader(level int) string {
-	switch level {
-	case 1:
-		return "# "
-	case 2:
-		return "## "
-	case 3:
-		return "### "
-	case 4:
-		return "#### "
-	case 5:
-		return "##### "
-	case 6:
-		return "###### "
-	default:
-		return ""
+	heads := map[int]string{
+		1: "# ",
+		2: "## ",
+		3: "### ",
+		4: "#### ",
+		5: "##### ",
+		6: "###### ",
 	}
+	if s, ok := heads[level]; ok {
+		return s
+	}
+	return ""
 }
