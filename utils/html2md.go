@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -298,7 +299,13 @@ func handleClosedTag(doc *goquery.Document) *goquery.Document {
 	for tag, sign := range closeTag {
 		doc.Find(tag).Each(func(i int, selection *goquery.Selection) {
 			if text, _ := selection.Html(); strings.TrimSpace(text) != "" {
-				selection.BeforeHtml(sign + text + sign)
+				t := []rune(strings.TrimSpace(text))
+				last := t[len(t)-1:]
+				if unicode.IsPunct(last[0]) {
+					selection.BeforeHtml(sign + text + sign + " ")
+				} else {
+					selection.BeforeHtml(sign + text + sign)
+				}
 			}
 			selection.Remove()
 		})
