@@ -7,10 +7,12 @@
 
 ### `视频下载已失效`: 极客时间的视频是采用的阿里云视频私有加密方式，暂时无破解方法！
 
+- [geektime-dl](#geektime-dl)
+  - [`视频下载已失效`: 极客时间的视频是采用的阿里云视频私有加密方式，暂时无破解方法！](#视频下载已失效-极客时间的视频是采用的阿里云视频私有加密方式暂时无破解方法)
 - [安装](#安装)
   - [必要条件](#必要条件)
-  - [使用`go get`安装](#%e4%bd%bf%e7%94%a8go-get%e5%ae%89%e8%a3%85)
-- [入门](#%e5%85%a5%e9%97%a8)
+  - [使用`go get`安装](#使用go-get安装)
+- [入门](#入门)
   - [视频和专栏的下载](#视频和专栏的下载)
   - [查看视频或专栏列表](#查看视频或专栏列表)
   - [可恢复继续下载](#可恢复继续下载)
@@ -54,7 +56,7 @@ geektime-dl [OPTIONS] command
 包含命令
 
 ```text
-COMMANDS:
+命令:
    login    Login geektime
    who      获取当前帐号
    users    获取帐号列表
@@ -62,17 +64,17 @@ COMMANDS:
    buy      获取已购买过的专栏和视频课程
    column   获取专栏列表
    video    获取视频课程列表
-   help, h  Shows a list of commands or help for one command
+   help, h  帮助
 
-GLOBAL OPTIONS:
-   --debug, -d               Turn on debug logs
+全局可选项:
+   --debug, -d               打印调试日志
    --info, -i                只输出视频信息
    --stream value, -s value  选择要下载的指定类型
    --pdf, -p                 下载专栏PDF文档
    --mp3, -m                 下载专栏MP3音频
    --markdown, --md          下载专栏markdown文档
-   --help, -h                show help
-   --version, -v             print the version
+   --help, -h                显示帮助信息
+   --version, -v             打印版本号
 ```
 
 
