@@ -12,7 +12,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-//Login login data
+// Login login data
 type Login struct {
 	phone    string
 	password string
@@ -21,20 +21,20 @@ type Login struct {
 	serverID string
 }
 
-//IsByPhoneAndPassword 通过手机号和密码登录
+// IsByPhoneAndPassword 通过手机号和密码登录
 func (l *Login) IsByPhoneAndPassword() bool {
 	return l.phone != "" && l.password != ""
 }
 
-//IsByCookie cookie login
+// IsByCookie cookie login
 func (l *Login) IsByCookie() bool {
 	return l.gcid != "" && l.gcess != ""
 }
 
-//LoginConfig config
+// LoginConfig config
 var LoginConfig Login
 
-//NewLoginCommand login command
+// NewLoginCommand login command
 func NewLoginCommand() []cli.Command {
 	return []cli.Command{
 		{
@@ -98,7 +98,7 @@ func NewLoginCommand() []cli.Command {
 }
 
 func loginAction(c *cli.Context) error {
-	//通过手机号和密码登录
+	// 通过手机号和密码登录
 	var (
 		gcid     = LoginConfig.gcid
 		gcess    = LoginConfig.gcess

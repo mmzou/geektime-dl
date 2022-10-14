@@ -1,2 +1,35 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+coverage.txt
+
+# Python
+*.pyc
+
 .vscode
-test/
+.idea
+dist/
+*_token
+downloader/*.jpg
+
+# Ignore compiled binaries
+# - native
+geektime-dl
+# - gox builds
+geektime-dl_*
+
+.cache/*
+
+# macOS
+.DS_Store
+
+output/

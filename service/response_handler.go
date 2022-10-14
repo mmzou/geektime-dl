@@ -15,8 +15,8 @@ func (rd *resultData) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (rd resultData) String() string {
-	return string(rd)
+func (rd *resultData) String() string {
+	return string(*rd)
 }
 
 type resultError struct {
@@ -67,7 +67,7 @@ func handleJSONParse(reader io.Reader, v interface{}) Error {
 	}
 
 	if !result.isSuccess() {
-		//未登录或者登录凭证无效
+		// 未登录或者登录凭证无效
 		if result.Error.Code == -3050 || result.Error.Code == -2000 {
 			return &ErrorInfo{Err: ErrNotLogin}
 		}

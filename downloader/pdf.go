@@ -7,7 +7,7 @@ import (
 	"github.com/mmzou/geektime-dl/utils"
 )
 
-//PrintToPDF print to pdf
+// PrintToPDF print to pdf
 func PrintToPDF(v Datum, cookies map[string]string, path string) error {
 
 	name := utils.FileName(v.Title, "pdf")

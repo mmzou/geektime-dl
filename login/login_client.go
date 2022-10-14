@@ -10,7 +10,7 @@ import (
 	"github.com/mmzou/geektime-dl/requester"
 )
 
-//Client login client
+// Client login client
 type Client struct {
 	*requester.HTTPClient
 }
@@ -38,7 +38,7 @@ type Result struct {
 	} `json:"extra"`
 }
 
-//NewLoginClient new login client
+// NewLoginClient new login client
 func NewLoginClient() *Client {
 	c := &Client{
 		HTTPClient: requester.NewHTTPClient(),
@@ -49,13 +49,13 @@ func NewLoginClient() *Client {
 	return c
 }
 
-//InitLoginPage init
+// InitLoginPage init
 func (c *Client) InitLoginPage() {
 	res, _ := c.Get("https://account.geekbang.org/signin?redirect=https%3A%2F%2Ftime.geekbang.org%2F")
 	defer res.Body.Close()
 }
 
-//Login by phone and dpassword
+// Login by phone and dpassword
 func (c *Client) Login(phone, password string) *Result {
 	result := &Result{}
 	post := map[string]string{
@@ -72,6 +72,7 @@ func (c *Client) Login(phone, password string) *Result {
 		"Referer":    "https://account.geekbang.org/signin?redirect=https%3A%2F%2Ftime.geekbang.org%2F",
 		"Accept":     "application/json",
 		"Connection": "keep-alive",
+		"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
 	}
 	body, err := c.Fetch("POST", "https://account.geekbang.org/account/ticket/login", post, header)
 	if err != nil {
@@ -100,7 +101,7 @@ func (c *Client) Login(phone, password string) *Result {
 	return result
 }
 
-//parseCookies 解析cookie
+// parseCookies 解析cookie
 func (r *Result) parseCookies(targetURL string, jar *cookiejar.Jar) {
 	url, _ := url.Parse(targetURL)
 	cookies := jar.Cookies(url)
@@ -120,7 +121,7 @@ func (r *Result) parseCookies(targetURL string, jar *cookiejar.Jar) {
 	r.Data.CookieString = strings.Join(cookieArr, ";")
 }
 
-//IsLoginSuccess 是否登陆成功
+// IsLoginSuccess 是否登陆成功
 func (r *Result) IsLoginSuccess() bool {
 	return r.Code == 0
 }

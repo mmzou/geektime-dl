@@ -6,17 +6,17 @@ import (
 	"github.com/mmzou/geektime-dl/service"
 )
 
-//Columns 专栏列表
+// Columns 专栏列表
 func Columns() ([]*service.Course, error) {
 	return getService().Columns()
 }
 
-//Videos 视频课程列表
+// Videos 视频课程列表
 func Videos() ([]*service.Course, error) {
 	return getService().Videos()
 }
 
-//CourseWithArticles course and articles info
+// CourseWithArticles course and articles info
 func CourseWithArticles(id int) (*service.Course, []*service.Article, error) {
 	course, err := getService().ShowCourse(id)
 	if err != nil {
@@ -33,7 +33,26 @@ func CourseWithArticles(id int) (*service.Course, []*service.Article, error) {
 	return course, articles, nil
 }
 
-//GetVideoPlayInfo 获取视频播放信息
+// ArticleDetail article detail
+func ArticleDetail(id int) (*service.Article, error) {
+	article, err := getService().Article(id)
+	if err != nil {
+		return nil, err
+	}
+	return article, nil
+}
+
+// ArticleComments get article comments
+func ArticleComments(id int) (*service.CommentList, error) {
+	list, err := getService().ArticleCommentsWithDiscussion(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return list, nil
+}
+
+// GetVideoPlayInfo 获取视频播放信息
 func GetVideoPlayInfo(aid int, videoID string) (*service.VideoPlayInfo, error) {
 	videoPlayAuth, err := VideoPlayAuth(aid, videoID)
 	if err != nil {
@@ -47,7 +66,7 @@ func GetVideoPlayInfo(aid int, videoID string) (*service.VideoPlayInfo, error) {
 	return videoPlayInfo, nil
 }
 
-//VideoPlayAuth 获取视频的播放授权信息
+// VideoPlayAuth 获取视频的播放授权信息
 func VideoPlayAuth(aid int, videoID string) (*service.VideoPlayAuth, error) {
 	videoPlayAuth, err := getService().VideoPlayAuth(aid, videoID)
 
@@ -58,7 +77,7 @@ func VideoPlayAuth(aid int, videoID string) (*service.VideoPlayAuth, error) {
 	return videoPlayAuth, nil
 }
 
-//VideoPlayInfo 获取视频播放信息
+// VideoPlayInfo 获取视频播放信息
 func VideoPlayInfo(playAuth string) (*service.VideoPlayInfo, error) {
 	videoPlayInfo, err := getService().VideoPlayInfo(playAuth)
 

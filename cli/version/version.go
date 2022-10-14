@@ -1,6 +1,6 @@
 package version
 
 var (
-	//Version version
+	// Version version
 	Version = "dev"
 )

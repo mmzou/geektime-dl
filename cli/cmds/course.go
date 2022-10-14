@@ -11,7 +11,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-//NewCourseCommand login command
+// NewCourseCommand login command
 func NewCourseCommand() []cli.Command {
 	return []cli.Command{
 		{
